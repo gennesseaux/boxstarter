@@ -55,17 +55,16 @@ if(Confirm-Install 'Boxstarter::Privacy-Settings')
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 if(Confirm-Install 'Boxstarter::UI-Preferences')
 {
-    # Change Explorer home screen back to "This PC"
-    Set-Registry -Path 'HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced' -Name 'LaunchTo' -Type 'DWord' -Value 1
-    # Change it back to "Quick Access" (Windows 10 default)
-    #Set-Registry -Path 'HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced' -Name 'LaunchTo' -Type 'DWord' -Value 2
+    # Set-WindowsExplorerOptions parameters can be found in https://github.com/chocolatey/boxstarter/blob/master/Boxstarter.WinConfig/Set-WindowsExplorerOptions.ps1
 
-    # Automatically Expand to Current Folder
-    Set-Registry -Path 'HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced' -Name 'NavPaneExpandToCurrentFolder' -Type 'DWord' -Value 0
-    # Disable Quick Access: Recent Files
-    Set-Registry -Path 'HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer' -Name 'ShowRecent' -Type 'DWord' -Value 0
-    # Disable Quick Access: Frequent Folders
-    Set-Registry -Path 'HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer' -Name 'ShowFrequent' -Type 'DWord' -Value 0
+    # Disables the Quick Access location and shows Computer view when opening Windows Explorer
+    Set-WindowsExplorerOptions -DisableOpenFileExplorerToQuickAccess
+    # Windows Explorer will expand the navigation pane to the current open folder
+    Set-WindowsExplorerOptions -EnableExpandToOpenFolder
+    # Disables the showing of recently used files in the Quick Access pane
+    Set-WindowsExplorerOptions -DisableShowRecentFilesInQuickAccess
+    # Disables the showing of frequently used directories in the Quick Access
+    Set-WindowsExplorerOptions -DisableShowFrequentFoldersInQuickAccess
 }
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
