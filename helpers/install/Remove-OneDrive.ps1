@@ -5,10 +5,10 @@ function Remove-OneDrive
     Get-Process -Name explorer* -ErrorAction SilentlyContinue | taskkill.exe /IM explorer* /F
 
     Write-Host "Remove OneDrive"
-    if (Test-Path "${env:systemroot}\System32\OneDriveSetup.exe") {
+    if(Test-Path "${env:systemroot}\System32\OneDriveSetup.exe") {
         & "${env:systemroot}\System32\OneDriveSetup.exe" /uninstall
     }
-    if (Test-Path "${env:systemroot}\SysWOW64\OneDriveSetup.exe") {
+    if(Test-Path "${env:systemroot}\SysWOW64\OneDriveSetup.exe") {
         & "${env:systemroot}\SysWOW64\OneDriveSetup.exe" /uninstall
     }
 

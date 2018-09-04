@@ -1,46 +1,55 @@
 function Install-ChocoApp
 {
-    #
-    # Use this function to install chocolatey package
-    #
-    # If the package already exist it will be upgraded 
-    #
+    <#
+    .SYNOPSIS
+    Use this function to install chocolatey package.
+    If the package already exist it will be upgraded
+
+    .PARAMETER Name
+    Package to install.
+    #>
+
     [CmdletBinding()]
     param(
         [Parameter(Mandatory=$true, Position=0)]
-        [String]$name
+        [String]$Name
     )
 
-    if( [string]::IsNullOrEmpty( $(chocolatey list -localonly -r | where {($_ -split "\|")[0] -like $name}) ) ) {
-        choco install $name --limitoutput
+    if( [string]::IsNullOrEmpty( $(chocolatey list -localonly -r | where {($_ -split "\|")[0] -like $Name}) ) ) {
+        choco install $Name --limitoutput
     }
-    else { 
-        choco upgrade $name --limitoutput
+    else {
+        choco upgrade $Name --limitoutput
     }
 
     # Update path
     $env:Path = [System.Environment]::GetEnvironmentVariable("Path", "Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path", "User")
 
-    if (Test-PendingReboot) { Invoke-Reboot }
+    if(Test-PendingReboot) { Invoke-Reboot }
 }
 
 function Install-ChocoWindowsFeature
 {
-    #
-    # Use this function to install windows feature
-    #
+    <#
+    .SYNOPSIS
+    Use this function to install windows feature.
+
+    .PARAMETER Name
+    Feature to install.
+    #>
+
     [CmdletBinding()]
     param(
         [Parameter(Mandatory=$true, Position=0)]
-        [String]$feature
+        [String]$Feature
     )
 
-    if( [string]::IsNullOrEmpty( $(chocolatey list -localonly -r | where {($_ -split "\|")[0] -like $name}) ) ) {
-        choco install $feature --source windowsfeatures --limitoutput
+    if( [string]::IsNullOrEmpty( $(chocolatey list -localonly -r | Where-Object {($_ -split "\|")[0] -like $Name}) ) ) {
+        choco install $Feature --source windowsfeatures --limitoutput
     }
-    else { 
-        choco upgrade $feature --source windowsfeatures --limitoutput
+    else {
+        choco upgrade $Feature --source windowsfeatures --limitoutput
     }
 
-    if (Test-PendingReboot) { Invoke-Reboot }
+    if(Test-PendingReboot) { Invoke-Reboot }
 }

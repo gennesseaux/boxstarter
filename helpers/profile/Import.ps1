@@ -6,9 +6,9 @@ Function Import-Function {
     <#
     .SYNOPSIS
     Dote source a local file or a web file.
-    .PARAMETER <Path>
-    Parth to the file. The path can point to a local file or web file. 
-    .PARAMETER <Credential>
+    .PARAMETER Path
+    Parth to the file. The path can point to a local file or web file.
+    .PARAMETER Credential
     Used to acces the web file when behind a proxy.
     #>
     param(
@@ -24,7 +24,7 @@ Function Import-Function {
     if($isUrl -eq $true) {
         # Create the Web Client object
         $webclient = New-Object System.Net.WebClient
-        
+
         # Tell it to use our default creds for the proxy
         if($Credential -eq $null) {
             $webclient.Proxy.Credentials = [System.Net.CredentialCache]::DefaultNetworkCredentials

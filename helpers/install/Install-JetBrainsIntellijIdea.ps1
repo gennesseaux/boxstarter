@@ -1,17 +1,17 @@
 function Install-JetBrainsIntellijIdea
 {
     param(
-        # JetBrains IntelliJ IDEA Community 
-        [switch]$community,
+        # JetBrains IntelliJ IDEA Community
+        [switch]$Community,
         # JetBrains IntelliJ IDEA Ultimate
-        [switch]$ultimate
+        [switch]$Ultimate
     )
 
     #
-    if($community)  { $ultimate=$false }
-    if($ultimate)   { $community=$false }
-    
+    if($Community)  { $Ultimate=$false }
+    if($Ultimate)   { $Community=$false }
+
     # install visual studio code
-    if($community)  { Install-ChocoApp intellijidea-community }
-    if($ultimate)   { Install-ChocoApp intellijidea-ultimate }
+    if($Community)  { Install-ChocoApp intellijidea-community }
+    if($Ultimate)   { Install-ChocoApp intellijidea-ultimate }
 }

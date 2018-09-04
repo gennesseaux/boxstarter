@@ -1,66 +1,91 @@
 function Set-EnvironmentVariable
 {
-    #
-    # Define an environment variable
-    #
+    <#
+    .SYNOPSIS
+    Sets an envrionment variable
+
+    .PARAMETER Variable
+    Name of the environment variable to add/set.
+
+    .PARAMETER Value
+    Data assigned to the environment variable.
+
+    .PARAMETER Scope
+    Can be: Machine, User or Process.
+    #>
+
     [CmdletBinding()]
     param(
         [Parameter(Mandatory=$true, Position=0)]
-        [String]$variable,
+        [String]$Variable,
 
         [Parameter(Mandatory=$true, Position=1)]
-        [String]$value,
+        [String]$Value,
 
         [Parameter(Mandatory=$true, Position=2)]
         [ValidateSet('Machine', 'User', 'Process')]
-        [String]$target
+        [String]$Scope
     )
 
-    if($target -eq 'Process') {
-        Set-Item "env:\$variable" "$value"
+    if($Scope -eq 'Process') {
+        Set-Item "env:\$Variable" "$Value"
     }
     else {
-        [Environment]::SetEnvironmentVariable("$variable", "$value", $target)
+        [Environment]::SetEnvironmentVariable("$Variable", "$Value", $Scope)
     }
 }
 
 function Get-EnvironmentVariable
 {
-    #
-    # Get an environment variable
-    #
+    <#
+    .SYNOPSIS
+    Gets an environment variable value.
+
+    .PARAMETER Variable
+    Name of environment variable.
+
+    .PARAMETER Scope
+    Can be: Machine, User or Process.
+    #>
+
     [CmdletBinding()]
     [OutputType([String])]
     param(
         [Parameter(Mandatory=$true, Position=0)]
-        [string]$variable,
+        [string]$Variable,
 
         [Parameter(Mandatory=$true, Position=1)]
         [ValidateSet('Machine', 'User', 'Process')]
-        [String]$target
+        [String]$Scope
     )
 
-    if($target -eq 'Process') {
-        Get-Item "env:$variable"
+    if($Scope -eq 'Process') {
+        Get-Item "env:$Variable"
     }
     else {
-        [Environment]::GetEnvironmentVariable("$variable", $target)
+        [Environment]::GetEnvironmentVariable("$Variable", $Scope)
     }
 }
 
-function Get-EnvironmentVariableNames {
-    #
-    # Get an environment variables
-    #
+function Get-EnvironmentVariableNames
+{
+    <#
+    .SYNOPSIS
+    List all environment variables for a specified scope.
+
+    .PARAMETER Scope
+    Can be: Machine, User or Process.
+    #>
+
     [CmdletBinding()]
     [OutputType([String])]
     param(
         [Parameter(Mandatory=$true, Position=0)]
         [ValidateSet('Machine', 'User', 'Process')]
-        [String]$target
+        [String]$Scope
     )
-    
-    switch ($target) {
+
+    switch ($Scope) {
         'User' { Get-Item 'HKCU:\Environment' | Select-Object -ExpandProperty Property }
         'Machine' { Get-Item 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Environment' | Select-Object -ExpandProperty Property }
         'Process' { Get-ChildItem Env:\ | Select-Object -ExpandProperty Key }
@@ -69,23 +94,31 @@ function Get-EnvironmentVariableNames {
 
 function Remove-EnvironmentVariable
 {
-    #
-    # Remove an environment variable
-    #
-   [CmdletBinding()]
+    <#
+    .SYNOPSIS
+    Remove an environment variable.
+
+    .PARAMETER Variable
+    Name of the environment variable to remove.
+
+    .PARAMETER Scope
+    Can be: Machine, User or Process.
+    #>
+
+    [CmdletBinding()]
     param(
         [Parameter(Mandatory=$true, Position=0)]
-        [string]$variable,
+        [string]$Variable,
 
         [Parameter(Mandatory=$true, Position=1)]
         [ValidateSet('Machine', 'User', 'Process')]
-        [String]$target
+        [String]$Scope
     )
 
-    if($target -eq 'Process') {
-        Set-Item "env:$variable" $null
+    if($Scope -eq 'Process') {
+        Set-Item "env:$Variable" $null
     }
     else {
-        [Environment]::SetEnvironmentVariable("$variable", $null, $target)
+        [Environment]::SetEnvironmentVariable("$Variable", $null, $Scope)
     }
 }

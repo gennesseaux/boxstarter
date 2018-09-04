@@ -8,6 +8,6 @@ function Remove-WindowsApp
     # Try to remove  apps
     foreach ($app in $apps) {
         Get-AppxPackage -Name $app -AllUsers | Remove-AppxPackage
-        Get-AppXProvisionedPackage -Online | where DisplayName -eq $app | Remove-AppxProvisionedPackage -Online
+        Get-AppXProvisionedPackage -Online | Where-Object DisplayName -eq $app | Remove-AppxProvisionedPackage -Online
     }
 }

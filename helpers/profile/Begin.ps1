@@ -12,9 +12,9 @@ $Boxstarter.AutoLogin=$true
 
 # Temporary
 Disable-UAC
-if (Test-PendingReboot) { Invoke-Reboot }
+if(Test-PendingReboot) { Invoke-Reboot }
 
-# 
+#
 if(Confirm-Install 'Boxstarter::Begin')
 {
     # Allow running PowerShell scripts
@@ -32,7 +32,7 @@ if(Confirm-Install 'Boxstarter::Begin')
         Enable-RemoteDesktop
     }
 
-    # 
+    #
     if(Confirm-Install 'Boxstarter::InternetExplorerESC') {
         Disable-InternetExplorerESC
     }
@@ -51,12 +51,12 @@ if(Confirm-Install 'Boxstarter::Begin')
     if(Confirm-Install 'Boxstarter::WindowsUpdate') {
         Start-UpdateServices
         Install-WindowsUpdate -AcceptEula
-        if (Test-PendingReboot) { Invoke-Reboot }
+        if(Test-PendingReboot) { Invoke-Reboot }
     }
 
     # Install Windows update
     if(Confirm-Install 'Boxstarter::MicrosoftUpdate') {
         Enable-MicrosoftUpdate
-        if (Test-PendingReboot) { Invoke-Reboot }
+        if(Test-PendingReboot) { Invoke-Reboot }
     }
 }

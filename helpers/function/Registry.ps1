@@ -1,12 +1,27 @@
 function Set-Registry
 {
-    #
-    # Define a registry value.
-    # If the path does not exit, it will be created
-    #
+    <#
+    .SYNOPSIS
+    Define a registry value.
+    If the path does not exit, it will be created.
+
+    .PARAMETER Path
+    The path to the registry key where the value should be set. Will be created if it doesn't exist.
+
+    .PARAMETER Name
+    The name of the value being set.
+
+    .PARAMETER Type
+    Type of data to store.
+    Can be one of: String, DWord, Binary, ExpandString, MultiString, None, QWord, Unknown
+
+    .PARAMETER Value
+    Value to store.
+    #>
+
     [CmdletBinding()]
     param(
-        
+
         [Parameter(Mandatory=$true, Position=0)]
         [String]$Path,
 
@@ -20,8 +35,8 @@ function Set-Registry
         [Parameter(Mandatory=$true, Position=3)]
         [Object]$Value
     )
-    
-    If (-Not (Test-Path $Path)) {
+
+    if(-Not (Test-Path $Path)) {
         New-Item -Path $Path -ItemType Directory -Force | Out-Null
     }
 
@@ -30,21 +45,28 @@ function Set-Registry
 
 function Remove-Registry
 {
-    #
-    # Define a registry value.
-    # If the path does not exit, it will be created
-    #
+    <#
+    .SYNOPSIS
+    Removes a value from a registry key, if it exists.
+
+    .PARAMETER Path
+    The path to the registry key where the value should be removed.
+
+    .PARAMETER Name
+    The name of the value to remove.
+    #>
+
     [CmdletBinding()]
     param(
-        
+
         [Parameter(Mandatory=$true, Position=0)]
         [String]$Path,
 
         [Parameter(Position=1)]
         [String]$Name
     )
-    
-    If (Test-Path $Path) {
+
+    if(Test-Path $Path) {
         if($Name -eq $null) {
             Remove-Item -Path $path -Confirm
         }

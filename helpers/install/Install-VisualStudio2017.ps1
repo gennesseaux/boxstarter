@@ -2,74 +2,74 @@ function Install-VisualStudio2017
 {
     param(
         # Visual Studio 2017 Community
-        [switch]$community,
+        [switch]$Community,
         # Visual Studio 2017 Enterprise
-        [switch]$entreprise,
-        
+        [switch]$Entreprise,
+
         # Azure development
-        [switch]$azure,
+        [switch]$Azure,
         # Data storage and processing
-        [switch]$data,
+        [switch]$Data,
         # .NET desktop dev.
-        [switch]$manageddesktop,
+        [switch]$ManagedDesktop,
         # Game dev. with Unity
-        [switch]$managedgame,
+        [switch]$ManagedGame,
         # Linux dev. with C++
-        [switch]$nativecrossplat,
+        [switch]$NativeCrossPlat,
         # Desktop dev. with C++
-        [switch]$nativedesktop,
+        [switch]$NativeDesktop,
         # Game dev. with C++
-        [switch]$nativegame,
+        [switch]$NativeGame,
         # Mobile dev. with C++
-        [switch]$nativemobile,
+        [switch]$NativeMobile,
         # .NET Core cross-platform dev.
-        [switch]$netcoretools,
+        [switch]$NetCoreTools,
         # Mobile dev. with .NET
-        [switch]$netcrossplat,
+        [switch]$NetCrossPlat,
         # ASP.NET and web dev.
-        [switch]$netweb,
+        [switch]$NetWeb,
         # Node.js dev.
-        [switch]$node,
+        [switch]$Node,
         # Office/SharePoint dev.
-        [switch]$office,
+        [switch]$Office,
         # Universal Windows Platform dev.
-        [switch]$universal,
+        [switch]$Universal,
         # Visual Studio extension dev.
-        [switch]$visualstudioextension,
+        [switch]$VisualStudioExtension,
         # Mobile dev. with JavaScript
-        [switch]$webcrossplat
+        [switch]$WebCrossPlat
     )
 
     #
-    if($community)  { $entreprise=$false }
-    if($entreprise) { $community=$false }
-    
-    # install visual studio code
-    if($community)              { Install-ChocoApp VisualStudio2017Community }
-    if($entreprise)             { Install-ChocoApp visualstudio2017enterprise }
+    if($Community)  { $Entreprise=$false }
+    if($Entreprise) { $Community=$false }
 
-    if($azure)                  { Install-ChocoApp visualstudio2017-workload-azure }
-    if($data)                   { Install-ChocoApp visualstudio2017-workload-data }
-    if($manageddesktop)         { Install-ChocoApp visualstudio2017-workload-manageddesktop }
-    if($managedgame)            { Install-ChocoApp visualstudio2017-workload-managedgame }
-    if($nativecrossplat)        { Install-ChocoApp visualstudio2017-workload-nativecrossplat }
-    if($nativedesktop)          { Install-ChocoApp visualstudio2017-workload-nativedesktop }
-    if($nativegame)             { Install-ChocoApp visualstudio2017-workload-nativegame }
-    if($nativemobile)           { Install-ChocoApp visualstudio2017-workload-nativemobile }
-    if($netcoretools)           { Install-ChocoApp visualstudio2017-workload-netcoretools }
-    if($netcrossplat)           { Install-ChocoApp visualstudio2017-workload-netcrossplat }
-    if($netweb)                 { Install-ChocoApp visualstudio2017-workload-netweb }
-    if($node)                   { Install-ChocoApp visualstudio2017-workload-node }
-    if($office)                 { Install-ChocoApp visualstudio2017-workload-office }
-    if($universal)              { Install-ChocoApp visualstudio2017-workload-universal }
-    if($visualstudioextension)  { Install-ChocoApp visualstudio2017-workload-visualstudioextension }
-    if($webcrossplat)           { Install-ChocoApp visualstudio2017-workload-webcrossplat }
-     
+    # install visual studio code
+    if($Community)              { Install-ChocoApp VisualStudio2017Community }
+    if($Entreprise)             { Install-ChocoApp visualstudio2017enterprise }
+
+    if($Azure)                  { Install-ChocoApp visualstudio2017-workload-azure }
+    if($Data)                   { Install-ChocoApp visualstudio2017-workload-data }
+    if($ManagedDesktop)         { Install-ChocoApp visualstudio2017-workload-manageddesktop }
+    if($ManagedGame)            { Install-ChocoApp visualstudio2017-workload-managedgame }
+    if($NativeCrossPlat)        { Install-ChocoApp visualstudio2017-workload-nativecrossplat }
+    if($NativeDesktop)          { Install-ChocoApp visualstudio2017-workload-nativedesktop }
+    if($NativeGame)             { Install-ChocoApp visualstudio2017-workload-nativegame }
+    if($NativeMobile)           { Install-ChocoApp visualstudio2017-workload-nativemobile }
+    if($NetCoreTools)           { Install-ChocoApp visualstudio2017-workload-netcoretools }
+    if($NetCrossPlat)           { Install-ChocoApp visualstudio2017-workload-netcrossplat }
+    if($NetWeb)                 { Install-ChocoApp visualstudio2017-workload-netweb }
+    if($Node)                   { Install-ChocoApp visualstudio2017-workload-node }
+    if($Office)                 { Install-ChocoApp visualstudio2017-workload-office }
+    if($Universal)              { Install-ChocoApp visualstudio2017-workload-universal }
+    if($VisualStudioExtension)  { Install-ChocoApp visualstudio2017-workload-visualstudioextension }
+    if($WebCrossPlat)           { Install-ChocoApp visualstudio2017-workload-webcrossplat }
+
     # Pin to task bar
-    if($community) {
+    if($Community) {
         Install-ChocolateyPinnedTaskBarItem "${env:ProgramFiles(x86)}\Microsoft Visual Studio\2017\Community\Common7\IDE\devenv.exe"
     }
-    if($entreprise) {
+    if($Entreprise) {
         Install-ChocolateyPinnedTaskBarItem "${env:ProgramFiles(x86)}\Microsoft Visual Studio\2017\Enterprise\Common7\IDE\devenv.exe"
     }
 }

@@ -3,9 +3,9 @@
 #
 #   This is the default profile used by boxstarter
 #   What this script does is:
-#     - Protect your privacy (see Privacy settings) 
-#     - Change user interface preferences (see UI preferences) 
-#     - Disable P2P Windows update (see Windows update) 
+#     - Protect your privacy (see Privacy settings)
+#     - Change user interface preferences (see UI preferences)
+#     - Disable P2P Windows update (see Windows update)
 #     - Remove default apps already installed (see Default Windows apps)
 #     - Change default options (see Default options)
 #     - Install few apps from chocolatey gallery (see DefaultInstall apps)
@@ -17,7 +17,7 @@
 #       - Notepad ++
 #       - Vlc
 #
-#   You have the possibility to desable each part of this script just by adding
+#   You have the possibility to disable each part of this script just by adding
 #   an option when calling the boxstarter.ps1
 #   For example:
 #     - Don't want to change the privacy setting: 'Boxstarter::Privacy-Settings=false'
@@ -48,7 +48,7 @@ if(Confirm-Install 'Boxstarter::Privacy-Settings')
     # Disable Telemetry (requires a reboot to take effect)
     # Set-Registry -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\DataCollection' -Name 'AllowTelemetry' -Type 'DWord' -Value 0
     # Get-Service DiagTrack,Dmwappushservice | Stop-Service | Set-Service -StartupType Disabled
-} 
+}
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #    UI preferences
@@ -180,7 +180,7 @@ if(Get-OptionBool 'Boxstarter::Essential::Remove::Microsoft.XboxSpeechToTextOver
 if(Get-OptionBool 'Boxstarter::Essential::Remove::Microsoft.ZuneMusic')                     { $apps += 'Microsoft.ZuneMusic' }
 if(Get-OptionBool 'Boxstarter::Essential::Remove::Microsoft.ZuneVideo')                     { $apps += 'Microsoft.ZuneVideo' }
 
-if(Get-OptionBool 'Boxstarter::Essential::Remove-Apps') { 
+if(Get-OptionBool 'Boxstarter::Essential::Remove-Apps') {
     # Remove default apps
     Remove-WindowsApp $apps
     # Prevents "Suggested Applications" returning

@@ -26,9 +26,9 @@ Function Import-File {
     <#
     .SYNOPSIS
     Dote source a local file or a web file.
-    .PARAMETER <Path>
-    Parth to the file. The path can point to a local file or web file. 
-    .PARAMETER <Credential>
+    .PARAMETER Path
+    Parth to the file. The path can point to a local file or web file.
+    .PARAMETER Credential
     Used to acces the web file when behind a proxy.
     #>
     param(
@@ -44,7 +44,7 @@ Function Import-File {
     if($isUrl -eq $true) {
         # Create the Web Client object
         $webclient = New-Object System.Net.WebClient
-        
+
         # Tell it to use our default creds for the proxy
         if($Credential -eq $null) {
             $webclient.Proxy.Credentials = [System.Net.CredentialCache]::DefaultNetworkCredentials
@@ -62,16 +62,16 @@ Function Import-File {
     else {
         $script = (Get-Content $Path) -join [environment]::newline
     }
-    
-    return $script      
+
+    return $script
 }
 Function Import-Function {
     <#
     .SYNOPSIS
     Dote source a local file or a web file.
-    .PARAMETER <Path>
-    Parth to the file. The path can point to a local file or web file. 
-    .PARAMETER <Credential>
+    .PARAMETER Path
+    Parth to the file. The path can point to a local file or web file.
+    .PARAMETER Credential
     Used to acces the web file when behind a proxy.
     #>
     param(
@@ -98,29 +98,29 @@ Import-Function -Path "$sRoot/helpers/function/Options.ps1"
 
 
 #--- [Execution] ------------------------------------------------------------------------------------------------------
-  
+
   # Define all options used during install
-  if(!($Options -eq $null)) {
+  if(!($null -eq $Options)) {
     foreach ($option in $Options) {
         [String]$Key,[String]$Value=$option.split('= ')
         Set-Option $Key $Value
     }
   }
 
-  # The install script to use with boxstarter
+  # Install scripts to use with boxstarter
   $installScript = @()
   $installScript += Import-File -Path "$sRoot/helpers/profile/Import.ps1"
 
-  # Add profiles to install script
-  if(!($Profiles -eq $null)) {
+  # Add profiles to install scripts
+  if(!($null -eq $Profiles)) {
     $installScript += Import-File -Path "$sRoot/helpers/profile/Begin.ps1"
-    $installScript += ($Profiles | ForEach {Import-File -Path "$sRoot/profile/$_.ps1"})
+    $installScript += ($Profiles | ForEach-Object {Import-File -Path "$sRoot/profile/$_.ps1"})
     $installScript += Import-File -Path "$sRoot/helpers/profile/End.ps1"
   }
 
   # Add personnal boxstarter scripts
-  if(!($Scripts -eq $null)) {
-    $installScript += ($Scripts | ForEach {Import-File -Path "$_"})
+  if(!($null -eq $Scripts)) {
+    $installScript += ($Scripts | ForEach-Object {Import-File -Path "$_"})
   }
 
   # Rename #SCRIPT_PATH#
@@ -132,7 +132,7 @@ Import-Function -Path "$sRoot/helpers/function/Options.ps1"
 
   # Get login credential for reboot
   $userCredential = Get-Credential -UserName $env:username -Message "Enter the login that will be used on reboot"
-  
+
   # Launch boxstarter
   . { Invoke-WebRequest -useb http://boxstarter.org/bootstrapper.ps1 } | Invoke-Expression; get-boxstarter -Force
   Install-BoxstarterPackage -PackageName $installScriptUrl -Credential $userCredential

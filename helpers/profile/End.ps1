@@ -8,7 +8,7 @@
 
 # Restore temporary settings
 Enable-UAC
-if (Test-PendingReboot) { Invoke-Reboot }
+if(Test-PendingReboot) { Invoke-Reboot }
 
 #
 if(Confirm-Install 'Boxstarter::End')
@@ -17,7 +17,7 @@ if(Confirm-Install 'Boxstarter::End')
     if(Confirm-Install 'Boxstarter::WindowsUpdate') {
         Start-UpdateServices
         Install-WindowsUpdate -AcceptEula
-        if (Test-PendingReboot) { Invoke-Reboot }
+        if(Test-PendingReboot) { Invoke-Reboot }
     }
 
 
