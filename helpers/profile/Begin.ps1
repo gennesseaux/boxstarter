@@ -46,7 +46,8 @@ if(Confirm-Install 'Boxstarter::Begin')
 
     # Small taskbar
     if(Confirm-Install 'Boxstarter::TaskbarOptions') {
-        Set-TaskbarOptions -Size Small -Combine Always
+        Set-TaskbarOptions -Size Small -Dock Bottom -Combine Always
+        Set-TaskbarOptions -Size Small -Dock Bottom -Combine Always -AlwaysShowIconsOn
     }
 
     # replace command prompt with powershell in start menu and win+x
