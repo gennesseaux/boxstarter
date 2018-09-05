@@ -7,6 +7,15 @@ function Install-ChocoApp
 
     .PARAMETER Name
     Package to install.
+
+    .PARAMETER Params
+    Parameters to pass to the package.
+
+    .PARAMETER RefreshEnv
+    Update environment variables without restarting the shell.
+
+    .PARAMETER NoUpgrade
+    Pin a package to suppress upgrades.
     #>
 
     [CmdletBinding()]
@@ -18,10 +27,13 @@ function Install-ChocoApp
         [string]$Params = '',
 
         [alias("r","refresh","refreshenv")]
-        [switch]$RefreshEnv
+        [switch]$RefreshEnv,
+
+        [alias("pin")]
+        [switch]$NoUpgrade
     )
 
-    if( [string]::IsNullOrEmpty( $(chocolatey list -localonly -r | Where-Object {($_ -split "\|")[0] -like $Name}) ) ) {
+    if( [string]::IsNullOrEmpty( $(choco list -localonly -r | Where-Object {($_ -split "\|")[0] -like $Name}) ) ) {
         choco install $Name --params $Params --yes --limitoutput
     }
     else {
@@ -31,6 +43,11 @@ function Install-ChocoApp
     # Updates the environment variables of the current powershell session
     if($RefreshEnv) {
         Update-SessionEnvironment
+    }
+
+    # Updates the environment variables of the current powershell session
+    if($NoUpgrade) {
+        choco pin add -n=$Name
     }
 
     # Update path
