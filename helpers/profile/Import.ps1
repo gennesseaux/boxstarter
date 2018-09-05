@@ -34,6 +34,9 @@ Function Import-Function {
             $webclient.Proxy.Credentials = $Credential
         }
 
+        # Define the TLS versions to use
+        [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12 -bor [Net.SecurityProtocolType]::Tls1
+
         # Download the script file
         $script = $webclient.DownloadString($Path)
     }
