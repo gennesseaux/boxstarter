@@ -46,6 +46,9 @@ if(Confirm-Install 'Boxstarter::DevCore::cmake')    { Install-ChocoApp cmake.ins
 if(Confirm-Install 'Boxstarter::DevCore::fonts')
 {
     if(Confirm-Install 'Boxstarter::DevCore::dejavufonts')      { Install-ChocoApp 'dejavufonts' }
+    if(Confirm-Install 'Boxstarter::DevCore::droidfonts')       { Install-ChocoApp 'droidfonts' }
+    if(Confirm-Install 'Boxstarter::DevCore::firacode')         { Install-ChocoApp 'firacode' }
+    if(Confirm-Install 'Boxstarter::DevCore::hackfont')         { Install-ChocoApp 'hackfont' }
     if(Confirm-Install 'Boxstarter::DevCore::inconsolata')      { Install-ChocoApp 'inconsolata' }
     if(Confirm-Install 'Boxstarter::DevCore::robotofonts')      { Install-ChocoApp 'robotofonts' }
 }
