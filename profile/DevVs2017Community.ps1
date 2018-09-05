@@ -7,7 +7,7 @@ Import-Function -Path "$sRoot/helpers/install/Install-VisualStudio2017VsixPackag
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #    Visual studio 2017
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-if(Confirm-Install 'Boxstarter::DevWindows::VisualStudio2017') {
+if(Confirm-Install 'Boxstarter::DevVs2017::VisualStudio2017') {
     Install-VisualStudio2017 `
         -Community `
         -NativeDesktop
@@ -17,7 +17,7 @@ if(Confirm-Install 'Boxstarter::DevWindows::VisualStudio2017') {
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #    Visual studio packages
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-if($(Confirm-Install 'Boxstarter::DevWindows::VisualStudio2017VsixPackage') -And $(Confirm-Install 'Boxstarter::DevWindows::VisualStudio2017')) {
+if($(Confirm-Install 'Boxstarter::DevVs2017::VisualStudio2017VsixPackage') -And $(Confirm-Install 'Boxstarter::DevVs2017::VisualStudio2017')) {
     # Packages to add to Visual studio 2017 :
     [String[]]$packages = @()
     $packages += 'StopOnFirstBuildError:https://marketplace.visualstudio.com/items?itemName=EinarEgilsson.StopOnFirstBuildError'
@@ -28,7 +28,7 @@ if($(Confirm-Install 'Boxstarter::DevWindows::VisualStudio2017VsixPackage') -And
     $packages += 'Viasfora:https://marketplace.visualstudio.com/items?itemName=TomasRestrepo.Viasfora'
     $packages += 'Outputenhancer:https://marketplace.visualstudio.com/items?itemName=NikolayBalakin.Outputenhancer'
     # Get user define packages
-    $userPackages = Get-Option 'Boxstarter::DevWindows::VisualStudio2017VsixPackage::Packages'
+    $userPackages = Get-Option 'Boxstarter::DevVs2017::VisualStudio2017VsixPackage::Packages'
     if(-not($null -eq $userPackages)) { $packages += $userPackages.split(';, ').Trim() }
 
     Install-VisualStudioCodeExtensions $packages
@@ -38,4 +38,4 @@ if($(Confirm-Install 'Boxstarter::DevWindows::VisualStudio2017VsixPackage') -And
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #    Other common tools
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-if(Confirm-Install 'Boxstarter::DevWindows::vswhere')               { Install-ChocoApp vswhere }
+if(Confirm-Install 'Boxstarter::DevVs2017::vswhere')               { Install-ChocoApp vswhere }
