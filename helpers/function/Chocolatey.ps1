@@ -14,14 +14,18 @@ function Install-ChocoApp
         [Parameter(Mandatory=$true, Position=0)]
         [String]$Name,
 
+        [alias("p","params","parameters","pkgParams")]
+        [string]$Params = '',
+
+        [alias("r","refresh","refreshenv")]
         [switch]$RefreshEnv
     )
 
     if( [string]::IsNullOrEmpty( $(chocolatey list -localonly -r | Where-Object {($_ -split "\|")[0] -like $Name}) ) ) {
-        choco install $Name --yes --limitoutput
+        choco install $Name --params $Params --yes --limitoutput
     }
     else {
-        choco upgrade $Name --yes --limitoutput
+        choco upgrade $Name --params $Params --yes --limitoutput
     }
 
     # Updates the environment variables of the current powershell session
