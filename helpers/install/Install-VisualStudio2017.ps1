@@ -3,6 +3,8 @@ function Install-VisualStudio2017
     param(
         # Visual Studio 2017 Community
         [switch]$Community,
+        # Visual Studio 2017 Professional
+        [switch]$Professional,
         # Visual Studio 2017 Enterprise
         [switch]$Entreprise,
 
@@ -41,11 +43,13 @@ function Install-VisualStudio2017
     )
 
     #
-    if($Community)  { $Entreprise=$false }
-    if($Entreprise) { $Community=$false }
+    if($Community)      { $Professional=$false; $Entreprise=$false;  }
+    if($Professional)   { $Community=$false;    $Entreprise=$false; }
+    if($Entreprise)     { $Community=$false;    $Professional=$false; }
 
     # install visual studio code
     if($Community)              { Install-ChocoApp VisualStudio2017Community }
+    if($Professional)           { Install-ChocoApp visualstudio2017professional }
     if($Entreprise)             { Install-ChocoApp visualstudio2017enterprise }
 
     if($Azure)                  { Install-ChocoApp visualstudio2017-workload-azure }
@@ -69,7 +73,10 @@ function Install-VisualStudio2017
     if($Community) {
         Install-ChocolateyPinnedTaskBarItem "${env:ProgramFiles(x86)}\Microsoft Visual Studio\2017\Community\Common7\IDE\devenv.exe"
     }
-    if($Entreprise) {
+    elseif($Professional) {
+        Install-ChocolateyPinnedTaskBarItem "${env:ProgramFiles(x86)}\Microsoft Visual Studio\2017\Professional\Common7\IDE\devenv.exe"
+    }
+    elseif($Entreprise) {
         Install-ChocolateyPinnedTaskBarItem "${env:ProgramFiles(x86)}\Microsoft Visual Studio\2017\Enterprise\Common7\IDE\devenv.exe"
     }
 }
