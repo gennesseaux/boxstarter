@@ -5,16 +5,11 @@ function Install-VisualStudioCodeExtensions
         [string[]]$Extensions
     )
 
-    # need to launch vscode so user folders are created as we can install extensions
-    Start-Process code
-    Start-Sleep -s 10
+    # Updates the environment variables of the current powershell session
+    Update-SessionEnvironment
 
     # install visual studio code extensions
     foreach ($extension in $Extensions) {
         code --install-extension $extension
     }
-
-    # Close vscode
-    Start-Sleep -s 10
-    Stop-Process code
 }
