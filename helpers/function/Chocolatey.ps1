@@ -12,14 +12,21 @@ function Install-ChocoApp
     [CmdletBinding()]
     param(
         [Parameter(Mandatory=$true, Position=0)]
-        [String]$Name
+        [String]$Name,
+
+        [switch]$RefreshEnv
     )
 
-    if( [string]::IsNullOrEmpty( $(chocolatey list -localonly -r | where {($_ -split "\|")[0] -like $Name}) ) ) {
-        choco install $Name --limitoutput
+    if( [string]::IsNullOrEmpty( $(chocolatey list -localonly -r | Where-Object {($_ -split "\|")[0] -like $Name}) ) ) {
+        choco install $Name --yes --limitoutput
     }
     else {
-        choco upgrade $Name --limitoutput
+        choco upgrade $Name --yes --limitoutput
+    }
+
+    # Updates the environment variables of the current powershell session
+    if($RefreshEnv) {
+        Update-SessionEnvironment
     }
 
     # Update path
@@ -45,10 +52,10 @@ function Install-ChocoWindowsFeature
     )
 
     if( [string]::IsNullOrEmpty( $(chocolatey list -localonly -r | Where-Object {($_ -split "\|")[0] -like $Name}) ) ) {
-        choco install $Feature --source windowsfeatures --limitoutput
+        choco install $Feature --source windowsfeatures --yes --limitoutput
     }
     else {
-        choco upgrade $Feature --source windowsfeatures --limitoutput
+        choco upgrade $Feature --source windowsfeatures --yes --limitoutput
     }
 
     if(Test-PendingReboot) { Invoke-Reboot }
