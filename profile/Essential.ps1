@@ -65,6 +65,9 @@ if(Confirm-Install 'Boxstarter::UI-Preferences')
     Set-WindowsExplorerOptions -DisableShowRecentFilesInQuickAccess
     # Disables the showing of frequently used directories in the Quick Access
     Set-WindowsExplorerOptions -DisableShowFrequentFoldersInQuickAccess
+    # Taskbar where window is open for multi-monitor
+    Set-Registry -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced' -Name 'MMTaskbarEnabled' -Value 1
+    Set-Registry -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced' -Name 'MMTaskbarMode' -Value 2
 }
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -80,6 +83,13 @@ if(Confirm-Install 'Boxstarter::Windows-Update')
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #    Default Windows apps
+#
+# Get-AppxPackage -AllUsers | Select Name, PackageFullName | Sort Name
+# Get-AppxProvisionedPackage -Online | Select DisplayName, PackageName | Sort DisplayName
+#
+# https://docs.microsoft.com/en-us/windows/application-management/remove-provisioned-apps-during-update
+# https://gist.github.com/alirobe/7f3b34ad89a159e6daa1
+# https://github.com/Disassembler0/Win10-Initial-Setup-Script/blob/master/Win10.ps1
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 Set-DefaultOption 'Boxstarter::Essential::Remove-Apps'                                     'true'
 
