@@ -55,16 +55,16 @@ if(Confirm-Install 'Boxstarter::Begin')
         Set-CornerNavigationOptions -EnableUsePowerShellOnWinX
     }
 
-    # Install Windows update
-    if(Confirm-Install 'Boxstarter::WindowsUpdate') {
-        Start-UpdateServices
-        Install-WindowsUpdate -AcceptEula
+    # Turns on Microsoft Update
+    if(Confirm-Install 'Boxstarter::MicrosoftUpdate') {
+        Enable-MicrosoftUpdate
         if(Test-PendingReboot) { Invoke-Reboot }
     }
 
-    # Install Windows update
-    if(Confirm-Install 'Boxstarter::MicrosoftUpdate') {
-        Enable-MicrosoftUpdate
+    # Downloads and installs updates via Windows Update
+    if(Confirm-Install 'Boxstarter::WindowsUpdate') {
+        Start-UpdateServices
+        Install-WindowsUpdate -AcceptEula
         if(Test-PendingReboot) { Invoke-Reboot }
     }
 }
