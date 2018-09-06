@@ -23,6 +23,11 @@ function Get-IsOSWindows10
     return $osInfo.Major -eq 10
 }
 
+function Get-OSReleaseId
+{
+    return (Get-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion").ReleaseId
+}
+
 function Get-SystemDrive
 {
     <#
