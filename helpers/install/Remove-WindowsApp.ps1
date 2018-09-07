@@ -11,12 +11,12 @@ function Remove-WindowsApp
 
         $PackageName = (Get-AppxPackage -Name $app -AllUsers).PackageFullName
         if ($PackageName) {
-            Remove-AppxPackage -Package $PackageName
+            Remove-AppxPackage -Package $PackageName -ErrorAction SilentlyContinue
         }
 
         $ProvisionedPackageName = (Get-AppxProvisionedPackage -Online | Where-Object {$_.DisplayName -eq $app}).PackageName
         if ($ProvisionedPackageName) {
-            Remove-AppxProvisionedPackage -Online -Package $ProvisionedPackageName
+            Remove-AppxProvisionedPackage -Online -Package $ProvisionedPackageName -ErrorAction SilentlyContinue
         }
     }
 }
