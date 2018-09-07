@@ -34,9 +34,5 @@ function Remove-OneDrive
     Write-Host "Removing startmenu junk entry"
     Remove-Item -Force -ErrorAction SilentlyContinue "${env:userprofile}\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\OneDrive.lnk"
 
-    Write-Host "Restarting explorer..."
-    Start-Process "explorer.exe"
-
-    Write-Host "Wait for explorer to reload.."
-    Start-Sleep 15
+    Restart-Explorer
 }
