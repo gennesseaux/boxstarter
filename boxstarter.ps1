@@ -95,7 +95,6 @@ Function Import-Function {
 
 #--- [Import] ---------------------------------------------------------------------------------------------------------
 Import-Function -Path "$sRoot/helpers/function/EnvironmentVariable.ps1"
-Import-Function -Path "$sRoot/helpers/function/HasteBin.ps1"
 Import-Function -Path "$sRoot/helpers/function/Options.ps1"
 #----------------------------------------------------------------------------------------------------------------------
 
@@ -129,15 +128,14 @@ Import-Function -Path "$sRoot/helpers/function/Options.ps1"
   # Rename #SCRIPT_PATH#
   $installScript = $installScript -replace "#SCRIPT_PATH#", $sRoot
 
-  # Create a haste bin file to give to boxstarter
-  # To use any credential in your scipt
-  $installScriptUrl = Out-HasteBin $($installScript -join [environment]::newline)
+  # Create a script file to give to boxstarter
+  Set-Content -Value $($installScript -join [environment]::newline) -Path "$($env:temp)\boxstarter_script.txt"
 
   # Get login credential for reboot
   $userCredential = Get-Credential -UserName $env:username -Message "Enter the login that will be used on reboot"
 
   # Launch boxstarter
   . { Invoke-WebRequest -useb http://boxstarter.org/bootstrapper.ps1 } | Invoke-Expression; get-boxstarter -Force
-  Install-BoxstarterPackage -PackageName $installScriptUrl -Credential $userCredential
+  Install-BoxstarterPackage "$($env:temp)\boxstarter_script.txt" -Credential $userCredential
 
   #----------------------------------------------------------------------------------------------------------------------
