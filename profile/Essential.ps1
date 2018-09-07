@@ -124,7 +124,9 @@ Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.People'             
 Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.Print3D'                        'true'
 Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.SkypeApp'                       'true'
 Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.StorePurchaseApp'               'false'
+Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.Todos'                          'true'
 Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.Wallet'                         'true'
+Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.Whiteboard'                     'true'
 Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.Windows.Photos'                 'false'
 Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.WindowsAlarms'                  'false'
 Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.WindowsCalculator'              'false'
@@ -190,7 +192,9 @@ if(Get-OptionBool 'Boxstarter::Essential::Remove::Microsoft.People')            
 if(Get-OptionBool 'Boxstarter::Essential::Remove::Microsoft.Print3D')                       { $apps += 'Microsoft.Print3D' }
 if(Get-OptionBool 'Boxstarter::Essential::Remove::Microsoft.SkypeApp')                      { $apps += 'Microsoft.SkypeApp' }
 if(Get-OptionBool 'Boxstarter::Essential::Remove::Microsoft.StorePurchaseApp')              { $apps += 'Microsoft.StorePurchaseApp' }
-if(Get-OptionBool 'Boxstarter::Essential::Remove::Microsoft.Wallet')                        { $apps += 'Microsoft.Wallet' }
+if(Get-OptionBool 'Boxstarter::Essential::Remove::Microsoft.Todos')                         { $apps += 'Microsoft.Todos' }
+if(Get-OptionBool 'Boxstarter::Essential::Remove::Microsoft.Wallet')                        { $apps += 'Microsoft.WalletWalletTodos' }
+if(Get-OptionBool 'Boxstarter::Essential::Remove::Microsoft.Whiteboard')                    { $apps += 'Microsoft.Whiteboard' }
 if(Get-OptionBool 'Boxstarter::Essential::Remove::Microsoft.Windows.Photos')                { $apps += 'Microsoft.Windows.Photos' }
 if(Get-OptionBool 'Boxstarter::Essential::Remove::Microsoft.WindowsAlarms')                 { $apps += 'Microsoft.WindowsAlarms' }
 if(Get-OptionBool 'Boxstarter::Essential::Remove::Microsoft.WindowsCalculator')             { $apps += 'Microsoft.WindowsCalculator' }
@@ -230,7 +234,7 @@ if(Get-OptionBool 'Boxstarter::Essential::Remove-Apps') {
 
     # Remove default apps
     Remove-WindowsApp $apps
-    
+
     # Prevents "Suggested Applications" returning
     Set-Registry -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\Cloud Content' -Name 'DisableWindowsConsumerFeatures' -Type 'DWord' -Value 1
 
