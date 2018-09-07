@@ -19,8 +19,8 @@
 
 
 #--- [Import] ---------------------------------------------------------------------------------------------------------
-Import-Function -Path "$sRoot/helpers/install/Remove-WindowsApp.ps1"
-Import-Function -Path "$sRoot/helpers/install/Remove-OneDrive.ps1"
+Import-Function -Path "$sRoot/helpers/tweak/Remove-WindowsApp.ps1"
+Import-Function -Path "$sRoot/helpers/tweak/Remove-OneDrive.ps1"
 #----------------------------------------------------------------------------------------------------------------------
 
 
@@ -232,11 +232,11 @@ if(Get-OptionBool 'Boxstarter::Essential::Remove-Apps') {
 
     Write-BoxstarterMessage "Removing Windows apps..."
 
-    # Remove default apps
-    Remove-WindowsApp $apps
-
     # Prevents "Suggested Applications" returning
     Set-Registry -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\Cloud Content' -Name 'DisableWindowsConsumerFeatures' -Type 'DWord' -Value 1
+
+    # Remove default apps
+    Remove-WindowsApp $apps
 
     # remove oneDrive
     if(Get-OptionBool 'Boxstarter::Essential::Remove::Microsoft.OneDrive') {
