@@ -27,11 +27,11 @@ if(Confirm-Install 'Boxstarter::Begin')
         # Set-WindowsExplorerOptions parameters can be found in https://github.com/chocolatey/boxstarter/blob/master/Boxstarter.WinConfig/Set-WindowsExplorerOptions.ps1
 
         # hidden files will be shown in Windows Explorer
-        Set-WindowsExplorerOptions -EnableShowHiddenFilesFoldersDrives
         # hidden Operating System files will be shown in Windows Explorer
-        Set-WindowsExplorerOptions -EnableShowProtectedOSFiles
         # Windows Explorer will include the file extension in file names
-        Set-WindowsExplorerOptions -EnableShowFileExtensions
+        Set-WindowsExplorerOptions -EnableShowHiddenFilesFoldersDrives `
+                                   -EnableShowProtectedOSFiles `
+                                   -EnableShowFileExtensions
     }
 
     # Enable remote desktop
