@@ -12,7 +12,7 @@
 #   You have the possibility to disable each part of this script just by adding
 #   an option when calling the boxstarter.ps1
 #   For example:
-#     - Don't want to change the privacy setting: 'Boxstarter::Privacy-Settings=false'
+#     - Don't want to change the privacy setting: 'Boxstarter::Essential::Privacy-Settings=false'
 #     - Don't want to remove skype: 'Boxstarter::Essential::Remove::Microsoft.SkypeApp=false'
 #     - Want to remove the calculator: 'Boxstarter::Essential::Remove::Microsoft.WindowsCalculator=true'
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -27,8 +27,10 @@ Import-Function -Path "$sRoot/helpers/install/Remove-OneDrive.ps1"
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #    Privacy settings
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-if(Confirm-Install 'Boxstarter::Privacy-Settings')
+if(Confirm-Install 'Boxstarter::Essential::Privacy-Settings')
 {
+    Write-BoxstarterMessage "Updating Privacy settings..."
+
     # Let apps use my advertising ID: Disable
     Set-Registry -Path 'HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\AdvertisingInfo' -Name 'Enabled' -Type 'DWord' -Value 0
     # SmartScreen Filter for Store Apps: Disable
@@ -45,8 +47,10 @@ if(Confirm-Install 'Boxstarter::Privacy-Settings')
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #    UI preferences
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-if(Confirm-Install 'Boxstarter::UI-Preferences')
+if(Confirm-Install 'Boxstarter::Essential::UI-Preferences')
 {
+    Write-BoxstarterMessage "Updating UI preferences..."
+
     # Set-WindowsExplorerOptions parameters can be found in https://github.com/chocolatey/boxstarter/blob/master/Boxstarter.WinConfig/Set-WindowsExplorerOptions.ps1
 
     # Disables the Quick Access location and shows Computer view when opening Windows Explorer
@@ -67,8 +71,10 @@ if(Confirm-Install 'Boxstarter::UI-Preferences')
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #    Windows update
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-if(Confirm-Install 'Boxstarter::Windows-Update')
+if(Confirm-Install 'Boxstarter::Essential::Windows-Update')
 {
+    Write-BoxstarterMessage "Updating Windows update..."
+
     # Disable P2P Update downloads outside of local network
     Set-Registry -Path 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\DeliveryOptimization\Config' -Name 'DODownloadMode' -Type 'DWord' -Value 1
     Set-Registry -Path 'HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\DeliveryOptimization' -Name 'SystemSettingsDownloadMode' -Type 'DWord' -Value 3
@@ -111,6 +117,7 @@ Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.MSPaint'            
 Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.NetworkSpeedTest'               'true'
 Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.Office.OneNote'                 'true'
 Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.Office.Sway'                    'true'
+Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.OfficeLens'                     'true'
 Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.OneConnect'                     'true'
 Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.OneDrive'                       'true'
 Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.People'                         'true'
@@ -176,6 +183,7 @@ if(Get-OptionBool 'Boxstarter::Essential::Remove::Microsoft.MSPaint')           
 if(Get-OptionBool 'Boxstarter::Essential::Remove::Microsoft.NetworkSpeedTest')              { $apps += 'Microsoft.NetworkSpeedTest' }
 if(Get-OptionBool 'Boxstarter::Essential::Remove::Microsoft.Office.OneNote')                { $apps += 'Microsoft.Office.OneNote' }
 if(Get-OptionBool 'Boxstarter::Essential::Remove::Microsoft.Office.Sway')                   { $apps += 'Microsoft.Office.Sway' }
+if(Get-OptionBool 'Boxstarter::Essential::Remove::Microsoft.OfficeLens')                    { $apps += 'Microsoft.OfficeLens' }
 if(Get-OptionBool 'Boxstarter::Essential::Remove::Microsoft.OneConnect')                    { $apps += 'Microsoft.OneConnect' }
 #if(Get-OptionBool 'Boxstarter::Essential::Remove::Microsoft.OneDrive')                      { $apps += 'Microsoft.OneDrive' }
 if(Get-OptionBool 'Boxstarter::Essential::Remove::Microsoft.People')                        { $apps += 'Microsoft.People' }
@@ -217,8 +225,12 @@ if(Get-OptionBool 'Boxstarter::Essential::Remove::Solitaire')                   
 if(Get-OptionBool 'Boxstarter::Essential::Remove::Twitter')                                 { $apps += '*Twitter*' }
 
 if(Get-OptionBool 'Boxstarter::Essential::Remove-Apps') {
+
+    Write-BoxstarterMessage "Removing Windows apps..."
+
     # Remove default apps
     Remove-WindowsApp $apps
+    
     # Prevents "Suggested Applications" returning
     Set-Registry -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\Cloud Content' -Name 'DisableWindowsConsumerFeatures' -Type 'DWord' -Value 1
 
@@ -247,9 +259,9 @@ if(Get-OptionBool 'Boxstarter::Essential::Remove-Apps') {
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #    Default options
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-if(Confirm-Install 'Boxstarter::Disable-BingSearch')         { Disable-BingSearch  }
-if(Confirm-Install 'Boxstarter::Disable-GameBarTips')        { Disable-GameBarTips }
-if(Confirm-Install 'Boxstarter::Disable-XboxGamebar') {
+if(Confirm-Install 'Boxstarter::Essential::Disable-BingSearch')         { Disable-BingSearch  }
+if(Confirm-Install 'Boxstarter::Essential::Disable-GameBarTips')        { Disable-GameBarTips }
+if(Confirm-Install 'Boxstarter::Essential::Disable-XboxGamebar') {
     Set-Registry -Path 'HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\GameDVR' -Name 'AppCaptureEnabled' -Type 'DWord' -Value 0
     Set-Registry -Path 'HKCU:\System\GameConfigStore' -Name 'GameDVR_Enabled' -Type 'DWord' -Value 0
 }
