@@ -54,8 +54,9 @@ Function Import-Function {
 }
 
 # Defautl import
+Import-Function -Path "$sRoot/helpers/function/Chocolatey.ps1"
 Import-Function -Path "$sRoot/helpers/function/EnvironmentVariable.ps1"
 Import-Function -Path "$sRoot/helpers/function/Options.ps1"
 Import-Function -Path "$sRoot/helpers/function/OsInformation.ps1"
 Import-Function -Path "$sRoot/helpers/function/Registry.ps1"
-Import-Function -Path "$sRoot/helpers/function/Chocolatey.ps1"
+Import-Function -Path "$sRoot/helpers/function/Pin-TaskBarItem.ps1"
