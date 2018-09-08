@@ -7,7 +7,7 @@ function Install-VisualStudioCode
 	if (test-path("${$env:LOCALAPPDATA}\Programs\Microsoft VS Code\Code.exe")) {
         Pin-TaskBarItem "${env:LOCALAPPDATA}\Programs\Microsoft VS Code\Code.exe"
     }
-    else if (test-path("${env:ProgramFiles}\Microsoft VS Code\Code.exe")) {
+    elseif (test-path("${env:ProgramFiles}\Microsoft VS Code\Code.exe")) {
         Pin-TaskBarItem "${env:ProgramFiles}\Microsoft VS Code\Code.exe"
     }
 }
