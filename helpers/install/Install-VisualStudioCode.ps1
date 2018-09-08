@@ -5,9 +5,9 @@ function Install-VisualStudioCode
 
     # Pin to task bar
 	if (test-path("${$env:LOCALAPPDATA}\Programs\Microsoft VS Code\Code.exe")) {
-        Install-ChocolateyPinnedTaskBarItem "${env:LOCALAPPDATA}\Programs\Microsoft VS Code\Code.exe"
+        Pin-TaskBarItem "${env:LOCALAPPDATA}\Programs\Microsoft VS Code\Code.exe"
     }
     else if (test-path("${env:ProgramFiles}\Microsoft VS Code\Code.exe")) {
-        Install-ChocolateyPinnedTaskBarItem "${env:ProgramFiles}\Microsoft VS Code\Code.exe"
+        Pin-TaskBarItem "${env:ProgramFiles}\Microsoft VS Code\Code.exe"
     }
 }
