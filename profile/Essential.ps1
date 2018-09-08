@@ -53,6 +53,12 @@ if(Confirm-Install 'Boxstarter::Essential::UI-Preferences')
 
     # Set-WindowsExplorerOptions parameters can be found in https://github.com/chocolatey/boxstarter/blob/master/Boxstarter.WinConfig/Set-WindowsExplorerOptions.ps1
 
+    # hidden files will be shown in Windows Explorer
+    Set-WindowsExplorerOptions -EnableShowHiddenFilesFoldersDrives
+    # hidden Operating System files will be shown in Windows Explorer
+    Set-WindowsExplorerOptions -EnableShowProtectedOSFiles
+    # Windows Explorer will include the file extension in file names
+    Set-WindowsExplorerOptions -EnableShowFileExtensions
     # Disables the Quick Access location and shows Computer view when opening Windows Explorer
     Set-WindowsExplorerOptions -DisableOpenFileExplorerToQuickAccess
     # Windows Explorer will expand the navigation pane to the current open folder
@@ -67,6 +73,40 @@ if(Confirm-Install 'Boxstarter::Essential::UI-Preferences')
     # Turn off People in Taskbar
     Set-Registry -Path 'HKCU:SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced\People' -Name 'PeopleBand' -Type 'DWord' -Value 1
 }
+
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#    Remote desktop
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+if(Confirm-Install 'Boxstarter::Essential::RemoteDesktop') {
+    Enable-RemoteDesktop
+}
+
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#    Internet explorer
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+if(Confirm-Install 'Boxstarter::Essential::InternetExplorerESC') {
+    Disable-InternetExplorerESC
+}
+
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#    Taskbar options
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+if(Confirm-Install 'Boxstarter::Essential::TaskbarOptions') {
+    Set-TaskbarOptions -Size Small -Dock Bottom -Combine Always
+    Set-TaskbarOptions -Size Small -Dock Bottom -Combine Always -AlwaysShowIconsOn
+}
+
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#    Corner navigation options
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+if(Confirm-Install 'Boxstarter::Essential::CornerNavigationOptions') {
+    Set-CornerNavigationOptions -EnableUsePowerShellOnWinX
+}
+
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #    Windows update

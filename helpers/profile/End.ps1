@@ -8,18 +8,20 @@
 
 # Restore temporary settings
 Enable-UAC
-if(Test-PendingReboot) { Invoke-Reboot }
 
 #
 if(Confirm-Install 'Boxstarter::End')
 {
-    # Install Windows update
-    if(Confirm-Install 'Boxstarter::WindowsUpdate') {
+    # Enable Windows update
+    if(Confirm-Install 'Boxstarter::End::WindowsUpdate') {
         Start-UpdateServices
         Install-WindowsUpdate -AcceptEula
-        if(Test-PendingReboot) { Invoke-Reboot }
     }
 
+    # Disable Microsoft Update
+    if(Confirm-Install 'Boxstarter::End::MicrosoftUpdate') {
+        Enable-MicrosoftUpdate
+    }
 
     # Cleanup
     Remove-Item -Recurse -Force -ErrorAction SilentlyContinue "C:\eula*.txt"
@@ -41,3 +43,5 @@ foreach($var in Get-EnvironmentVariableNames('User')) {
         Remove-EnvironmentVariable $var 'User'
     }
 }
+
+if(Test-PendingReboot) { Invoke-Reboot }
