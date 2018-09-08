@@ -23,10 +23,10 @@ function Install-ChocoApp
         [Parameter(Mandatory=$true, Position=0)]
         [String]$Name,
 
-        [alias("p","params","parameters","pkgParams")]
+        [alias("p","parameters","pkgParams")]
         [string]$Params = '',
 
-        [alias("r","refresh","refreshenv")]
+        [alias("r","refresh")]
         [switch]$RefreshEnv,
 
         [alias("pin")]
