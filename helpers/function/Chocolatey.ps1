@@ -47,7 +47,7 @@ function Install-ChocoApp
 
     # Updates the environment variables of the current powershell session
     if($NoUpgrade) {
-        choco pin add -n=$Name
+        choco pin add -n=$($Name)
     }
 
     # Update path
