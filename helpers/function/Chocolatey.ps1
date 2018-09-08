@@ -33,7 +33,7 @@ function Install-ChocoApp
         [switch]$NoUpgrade
     )
 
-    if( [string]::IsNullOrEmpty( $(choco list -localonly -r | Where-Object {($_ -split "\|")[0] -like $Name}) ) ) {
+    if( [string]::IsNullOrEmpty( $(choco list --local-only --limitoutput | Where-Object {($_ -split "\|")[0] -like $Name}) ) ) {
         choco install $Name --params $Params --yes --limitoutput
     }
     else {
@@ -47,7 +47,9 @@ function Install-ChocoApp
 
     # Updates the environment variables of the current powershell session
     if($NoUpgrade) {
-        choco pin add -n=$($Name)
+        if( [string]::IsNullOrEmpty( $(choco pin list --limitoutput | Where-Object {($_ -split "\|")[0] -like $Name}) ) ) {
+            choco pin add -n=$Name
+        }
     }
 
     # Update path
