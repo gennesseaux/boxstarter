@@ -168,6 +168,9 @@ Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.Todos'              
 Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.Wallet'                         'true'
 Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.Whiteboard'                     'true'
 Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.Windows.Photos'                 'false'
+Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.Windows.CapturePicker'          'false'
+Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.Windows.CloudExperienceHost'    'true'
+Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.Windows.PeopleExperienceHost'   'true'
 Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.WindowsAlarms'                  'false'
 Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.WindowsCalculator'              'false'
 Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.WindowsCamera'                  'true'
@@ -185,6 +188,8 @@ Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.XboxIdentityProvider
 Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.XboxSpeechToTextOverlay'        'true'
 Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.ZuneMusic'                      'true'
 Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.ZuneVideo'                      'true'
+
+Set-DefaultOption 'Boxstarter::Essential::windows.immersivecontrolpanel'                     'true'
 
 Set-DefaultOption 'Boxstarter::Essential::Remove::Autodesk'                                 'true'
 Set-DefaultOption 'Boxstarter::Essential::Remove::BubbleWitch'                              'true'
@@ -236,6 +241,9 @@ if(Get-OptionBool 'Boxstarter::Essential::Remove::Microsoft.Todos')             
 if(Get-OptionBool 'Boxstarter::Essential::Remove::Microsoft.Wallet')                        { $apps += 'Microsoft.WalletWalletTodos' }
 if(Get-OptionBool 'Boxstarter::Essential::Remove::Microsoft.Whiteboard')                    { $apps += 'Microsoft.Whiteboard' }
 if(Get-OptionBool 'Boxstarter::Essential::Remove::Microsoft.Windows.Photos')                { $apps += 'Microsoft.Windows.Photos' }
+if(Get-OptionBool 'Boxstarter::Essential::Remove::Microsoft.Windows.CapturePicker')         { $apps += 'Microsoft.Windows.CapturePicker' }
+if(Get-OptionBool 'Boxstarter::Essential::Remove::Microsoft.Windows.CloudExperienceHost')   { $apps += 'Microsoft.Windows.CloudExperienceHostPhotos' }
+if(Get-OptionBool 'Boxstarter::Essential::Remove::Microsoft.Windows.PeopleExperienceHost')  { $apps += 'Microsoft.Windows.PeopleExperienceHostPhotos' }
 if(Get-OptionBool 'Boxstarter::Essential::Remove::Microsoft.WindowsAlarms')                 { $apps += 'Microsoft.WindowsAlarms' }
 if(Get-OptionBool 'Boxstarter::Essential::Remove::Microsoft.WindowsCalculator')             { $apps += 'Microsoft.WindowsCalculator' }
 if(Get-OptionBool 'Boxstarter::Essential::Remove::Microsoft.WindowsCamera')                 { $apps += 'Microsoft.WindowsCamera' }
@@ -253,6 +261,8 @@ if(Get-OptionBool 'Boxstarter::Essential::Remove::Microsoft.XboxIdentityProvider
 if(Get-OptionBool 'Boxstarter::Essential::Remove::Microsoft.XboxSpeechToTextOverlay')       { $apps += 'Microsoft.XboxSpeechToTextOverlay' }
 if(Get-OptionBool 'Boxstarter::Essential::Remove::Microsoft.ZuneMusic')                     { $apps += 'Microsoft.ZuneMusic' }
 if(Get-OptionBool 'Boxstarter::Essential::Remove::Microsoft.ZuneVideo')                     { $apps += 'Microsoft.ZuneVideo' }
+
+if(Get-OptionBool 'Boxstarter::Essential::Remove::windows.immersivecontrolpanel')           { $apps += 'windows.immersivecontrolpanel' }
 
 if(Get-OptionBool 'Boxstarter::Essential::Remove::Autodesk')                                { $apps += '*Autodesk*' }
 if(Get-OptionBool 'Boxstarter::Essential::Remove::BubbleWitch')                             { $apps += '*BubbleWitch*' }
