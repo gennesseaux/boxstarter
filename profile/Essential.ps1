@@ -67,9 +67,9 @@ if(Confirm-Install 'Boxstarter::Essential::UI-Preferences')
     Set-WindowsExplorerOptions -DisableShowRecentFilesInQuickAccess
     # Disables the showing of frequently used directories in the Quick Access
     Set-WindowsExplorerOptions -DisableShowFrequentFoldersInQuickAccess
-    # Taskbar where window is open for multi-monitor
+    # Taskbar on all monitors
     Set-Registry -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced' -Name 'MMTaskbarEnabled' -Type 'DWord' -Value 1
-    Set-Registry -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced' -Name 'MMTaskbarMode' -Type 'DWord' -Value 2
+    Set-Registry -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced' -Name 'MMTaskbarMode' -Type 'DWord' -Value 0
     # Turn off People in Taskbar
     Set-Registry -Path 'HKCU:SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced\People' -Name 'PeopleBand' -Type 'DWord' -Value 1
 }
