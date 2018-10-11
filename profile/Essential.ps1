@@ -123,6 +123,11 @@ if(Confirm-Install 'Boxstarter::Essential::UI-Preferences')
     DisableThumbnailCache
     DisableThumbsDBOnNetwork
 
+    HideTaskView
+    ShowLargeTaskbarIcons
+    SetTaskbarCombineAlways
+    HideTaskbarPeopleIcon
+
     # Set-WindowsExplorerOptions parameters can be found in https://github.com/chocolatey/boxstarter/blob/master/Boxstarter.WinConfig/Set-WindowsExplorerOptions.ps1
     # Disables the Quick Access location and shows Computer view when opening Windows Explorer
     Set-WindowsExplorerOptions -EnableExpandToOpenFolder
@@ -130,10 +135,6 @@ if(Confirm-Install 'Boxstarter::Essential::UI-Preferences')
     # Taskbar on all monitors
     Set-Registry -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced' -Name 'MMTaskbarEnabled' -Type 'DWord' -Value 1
     Set-Registry -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced' -Name 'MMTaskbarMode' -Type 'DWord' -Value 1
-    # Taskbar icon size
-    Set-Registry -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced' -Name 'TaskbarSmallIcons' -Type 'DWord' -Value 0
-    # Turn off People in Taskbar
-    Set-Registry -Path 'HKCU:SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced\People' -Name 'PeopleBand' -Type 'DWord' -Value 1
 }
 
 
