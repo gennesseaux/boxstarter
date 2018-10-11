@@ -41,7 +41,9 @@ function Remove-OneDrive
     reg unload 'hku\Default'
 
     Write-Host 'Removing startmenu junk entry'
-	Remove-Item -Path "${env:userprofile}\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\OneDrive.lnk" -Force -ErrorAction SilentlyContinue
+    if(!(Test-Path "${env:userprofile}\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\OneDrive.lnk")) {
+	    Remove-Item -Path "${env:userprofile}\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\OneDrive.lnk" -Force -ErrorAction SilentlyContinue
+    }
 
     Write-Host 'Restart Explorer'
     if(!(Get-Process -Name explorer -ErrorAction SilentlyContinue)) {
