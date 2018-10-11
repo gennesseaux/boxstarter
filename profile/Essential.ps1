@@ -130,6 +130,8 @@ if(Confirm-Install 'Boxstarter::Essential::UI-Preferences')
     # Taskbar on all monitors
     Set-Registry -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced' -Name 'MMTaskbarEnabled' -Type 'DWord' -Value 1
     Set-Registry -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced' -Name 'MMTaskbarMode' -Type 'DWord' -Value 1
+    # Taskbar icon size
+    Set-Registry -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced' -Name 'TaskbarSmallIcons' -Type 'DWord' -Value 0
     # Turn off People in Taskbar
     Set-Registry -Path 'HKCU:SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced\People' -Name 'PeopleBand' -Type 'DWord' -Value 1
 }
