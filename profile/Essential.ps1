@@ -12,7 +12,7 @@
 #   You have the possibility to disable each part of this script just by adding
 #   an option when calling the boxstarter.ps1
 #   For example:
-#     - Don't want to change the privacy setting: 'Boxstarter::Essential::Privacy-Settings=false'
+#     - Don't want to change the privacy setting: 'Boxstarter::Essential::Privacy=false'
 #     - Don't want to remove skype: 'Boxstarter::Essential::Remove::Microsoft.SkypeApp=false'
 #     - Want to remove the calculator: 'Boxstarter::Essential::Remove::Microsoft.WindowsCalculator=true'
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -21,28 +21,89 @@
 #--- [Import] ---------------------------------------------------------------------------------------------------------
 Import-Function -Path "$sRoot/helpers/tweak/Remove-WindowsApp.ps1"
 Import-Function -Path "$sRoot/helpers/tweak/Remove-OneDrive.ps1"
+Import-Function -Path "$sRoot/helpers/tweak/Disassembler0/Privacy.ps1"
+Import-Function -Path "$sRoot/helpers/tweak/Disassembler0/Security.ps1"
+Import-Function -Path "$sRoot/helpers/tweak/Disassembler0/Service.ps1"
+Import-Function -Path "$sRoot/helpers/tweak/Disassembler0/UI.ps1"
+Import-Function -Path "$sRoot/helpers/tweak/Disassembler0/ExplorerUI.ps1"
+Import-Function -Path "$sRoot/helpers/tweak/Disassembler0/Application.ps1"
 #----------------------------------------------------------------------------------------------------------------------
 
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #    Privacy settings
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-if(Confirm-Install 'Boxstarter::Essential::Privacy-Settings')
+if(Confirm-Install 'Boxstarter::Essential::Privacy')
 {
     Write-BoxstarterMessage "Updating Privacy settings..."
 
-    # Let apps use my advertising ID: Disable
-    Set-Registry -Path 'HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\AdvertisingInfo' -Name 'Enabled' -Type 'DWord' -Value 0
-    # SmartScreen Filter for Store Apps: Disable
-    Set-Registry -Path 'HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\AppHost' -Name 'EnableWebContentEvaluation' -Type 'DWord' -Value 0
-    # WiFi Sense: HotSpot Sharing: Disable
-    Set-Registry -Path 'HKLM:\Software\Microsoft\PolicyManager\default\WiFi\AllowWiFiHotSpotReporting' -Name 'value' -Type 'DWord' -Value 0
-    # WiFi Sense: Shared HotSpot Auto-Connect: Disable
-    Set-Registry -Path 'HKLM:\Software\Microsoft\PolicyManager\default\WiFi\AllowAutoConnectToWiFiSenseHotspots' -Name 'value' -Type 'DWord' -Value 0
-    # Disable Telemetry (requires a reboot to take effect)
-    # Set-Registry -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\DataCollection' -Name 'AllowTelemetry' -Type 'DWord' -Value 0
-    # Get-Service DiagTrack,Dmwappushservice | Stop-Service | Set-Service -StartupType Disabled
+    DisableTelemetry
+    DisableWiFiSense
+    DisableWebSearch
+    DisableAppSuggestions
+    DisableActivityHistory
+    DisableLocationTracking
+    DisableMapUpdates
+    DisableFeedback
+    DisableTailoredExperiences
+    DisableAdvertisingID
+    DisableWebLangList
+    DisableErrorReporting
+    SetP2PUpdateLocal
+    DisableDiagTrack
+    DisableWAPPush
 }
+
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#    Security  settings
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+if(Confirm-Install 'Boxstarter::Essential::Security')
+{
+    Write-BoxstarterMessage "Updating Security settings..."
+
+    SetCurrentNetworkPrivate
+    SetDEPOptOut
+    EnableF8BootMenu
+    EnableSharingMappedDrives
+    EnableAdminShares
+    EnableDefender
+    EnableCtrldFolderAccess
+}
+
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#    Service settings
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+if(Confirm-Install 'Boxstarter::Essential::Service')
+{
+    Write-BoxstarterMessage "Updating Service settings..."
+
+    DisableUpdateRestart
+    DisableSharedExperiences
+    DisableRemoteAssistance
+    EnableRemoteDesktop
+    DisableAutoplay
+    DisableAutorun
+    DisableFastStartup
+}
+
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#    UI settings
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+if(Confirm-Install 'Boxstarter::Essential::UI')
+{
+    Write-BoxstarterMessage "Updating UI settings..."
+
+    DisableStickyKeys
+    ShowTaskManagerDetails
+    ShowFileOperationsDetails
+    HideTaskbarPeopleIcon
+    EnableNumlock
+    DisableStartupSound
+}
+
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #    UI preferences
@@ -51,27 +112,39 @@ if(Confirm-Install 'Boxstarter::Essential::UI-Preferences')
 {
     Write-BoxstarterMessage "Updating UI preferences..."
 
-    # Set-WindowsExplorerOptions parameters can be found in https://github.com/chocolatey/boxstarter/blob/master/Boxstarter.WinConfig/Set-WindowsExplorerOptions.ps1
+    ShowKnownExtensions
+    ShowHiddenFiles
+    HideSyncNotifications
+    HideRecentShortcuts
+    SetExplorerThisPC
+    HideQuickAccess
+    ShowThisPCOnDesktop
+    DisableThumbnails
+    DisableThumbnailCache
+    DisableThumbsDBOnNetwork
 
-    # hidden files will be shown in Windows Explorer
-    Set-WindowsExplorerOptions -EnableShowHiddenFilesFoldersDrives
-    # hidden Operating System files will be shown in Windows Explorer
-    Set-WindowsExplorerOptions -EnableShowProtectedOSFiles
-    # Windows Explorer will include the file extension in file names
-    Set-WindowsExplorerOptions -EnableShowFileExtensions
+    # Set-WindowsExplorerOptions parameters can be found in https://github.com/chocolatey/boxstarter/blob/master/Boxstarter.WinConfig/Set-WindowsExplorerOptions.ps1
     # Disables the Quick Access location and shows Computer view when opening Windows Explorer
-    Set-WindowsExplorerOptions -DisableOpenFileExplorerToQuickAccess
-    # Windows Explorer will expand the navigation pane to the current open folder
     Set-WindowsExplorerOptions -EnableExpandToOpenFolder
-    # Disables the showing of recently used files in the Quick Access pane
-    Set-WindowsExplorerOptions -DisableShowRecentFilesInQuickAccess
-    # Disables the showing of frequently used directories in the Quick Access
-    Set-WindowsExplorerOptions -DisableShowFrequentFoldersInQuickAccess
+
     # Taskbar on all monitors
     Set-Registry -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced' -Name 'MMTaskbarEnabled' -Type 'DWord' -Value 1
-    Set-Registry -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced' -Name 'MMTaskbarMode' -Type 'DWord' -Value 0
+    Set-Registry -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced' -Name 'MMTaskbarMode' -Type 'DWord' -Value 1
     # Turn off People in Taskbar
     Set-Registry -Path 'HKCU:SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced\People' -Name 'PeopleBand' -Type 'DWord' -Value 1
+}
+
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#    Application
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+if(Confirm-Install 'Boxstarter::Essential::Application')
+{
+    Write-BoxstarterMessage "Updating Application preferences..."
+
+    UninstallXPSPrinter
+    RemoveFaxPrinter
+    UninstallFaxAndScan
 }
 
 
@@ -116,7 +189,6 @@ if(Confirm-Install 'Boxstarter::Essential::Windows-Update')
     Write-BoxstarterMessage "Updating Windows update..."
 
     # Disable P2P Update downloads outside of local network
-    Set-Registry -Path 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\DeliveryOptimization\Config' -Name 'DODownloadMode' -Type 'DWord' -Value 1
     Set-Registry -Path 'HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\DeliveryOptimization' -Name 'SystemSettingsDownloadMode' -Type 'DWord' -Value 3
 }
 

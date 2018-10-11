@@ -13,16 +13,25 @@ Set-ExecutionPolicy Unrestricted -Scope Process -Force
 # Profiles to install
 $profiles = @(
     'Essential'
-    'Essential-Tweaks'
+    #'Tools'
+    #'DevCore'
+    #'DevJava'
 )
 
 # Define options
 $options = @(
     'Boxstarter::Begin=true'
-    'Boxstarter::End=true'
+    'Boxstarter::Begin::WindowsUpdate=false'
 
-    'Boxstarter::Essential::Privacy-Settings=true'
+    'Boxstarter::End=true'
+    'Boxstarter::End::WindowsUpdate=false'
+
+    'Boxstarter::Essential::Privacy=true'
+    'Boxstarter::Essential::Security=true'
+    'Boxstarter::Essential::Service=true'
+    'Boxstarter::Essential::UI=true'
     'Boxstarter::Essential::UI-Preferences=true'
+    'Boxstarter::Essential::Application=true'
     'Boxstarter::Essential::RemoteDesktop=true'
     'Boxstarter::Essential::InternetExplorerESC=true'
     'Boxstarter::Essential::TaskbarOptions=true'
@@ -32,14 +41,7 @@ $options = @(
     'Boxstarter::Essential::Disable-GameBarTips=true'
     'Boxstarter::Essential::Disable-XboxGamebar=true'
     'Boxstarter::Essential::Remove-Apps=true'
-    'Boxstarter::Essential::Remove::Microsoft.OneDrive=false'
-
-    'Boxstarter::EssentailTweaks::Privacy-tweaks=true'
-    'Boxstarter::EssentailTweaks::Security-tweaks=true'
-    'Boxstarter::EssentailTweaks::Service-tweaks=true'
-    'Boxstarter::EssentailTweaks::UI-tweaks=true'
-    'Boxstarter::EssentailTweaks::Explorer-UI-tweaks=true'
-    'Boxstarter::EssentailTweaks::Application-tweaks=true'
+    'Boxstarter::Essential::Remove::Microsoft.OneDrive=true'
 )
 
 # Download my boxstarter bootstrap
