@@ -9,13 +9,6 @@ Import-Function -Path "$sRoot/helpers/install/Install-VisualStudioCode.ps1"
 #--- TEMPORARY ---
 Disable-UAC
 
-#--- Windows Settings ---
-Disable-BingSearch
-Disable-GameBarTips
-
-#--- Windows UI ---
-Set-WindowsExplorerOptions -EnableShowHiddenFilesFoldersDrives -EnableShowProtectedOSFiles -EnableShowFileExtensions
-
 #--- Tools ---
 Install-ChocoApp 7zip.install
 

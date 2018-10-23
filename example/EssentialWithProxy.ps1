@@ -16,16 +16,33 @@ Set-ExecutionPolicy Unrestricted -Scope Process -Force
 
 # Profiles to install
 $profiles = @(
-    #'Essential',
-    'DevCore'#,
-    #'DevWindows',
+    'Essential'
+    #'Tools'
+    'DevCore'
     #'DevJava'
 )
 
 # Define options
 $options = @(
-    'Boxstarter::Begin=false',
-    'Boxstarter::WindowsUpdate=false',
+    'Boxstarter::Begin=true'
+    'Boxstarter::Begin::WindowsUpdate=false'
+
+    'Boxstarter::End=true'
+    'Boxstarter::End::WindowsUpdate=false'
+
+    'Boxstarter::Essential::Privacy=true'
+    'Boxstarter::Essential::Security=true'
+    'Boxstarter::Essential::Service=true'
+    'Boxstarter::Essential::UI=true'
+    'Boxstarter::Essential::UI-Preferences=true'
+    'Boxstarter::Essential::Application=true'
+    'Boxstarter::Essential::RemoteDesktop=true'
+    'Boxstarter::Essential::InternetExplorerESC=true'
+    'Boxstarter::Essential::TaskbarOptions=true'
+    'Boxstarter::Essential::CornerNavigationOptions=true'
+    'Boxstarter::Essential::Windows-Update=true'
+    'Boxstarter::Essential::Remove-Apps=true'
+    
     'Boxstarter::DevCore::VisualStudioCodeExtensions::Extensions=ms-vscode.PowerShell,bibhasdn.git-easy'
 )
 

@@ -37,21 +37,25 @@ if(Confirm-Install 'Boxstarter::Essential::Privacy')
 {
     Write-BoxstarterMessage "Updating Privacy settings..."
 
-    DisableTelemetry
-    DisableWiFiSense
-    DisableWebSearch
-    DisableAppSuggestions
-    DisableActivityHistory
-    DisableLocationTracking
-    DisableMapUpdates
-    DisableFeedback
-    DisableTailoredExperiences
-    DisableAdvertisingID
-    DisableWebLangList
-    DisableErrorReporting
-    SetP2PUpdateLocal
-    DisableDiagTrack
-    DisableWAPPush
+    DisableTelemetry                # EnableTelemetry
+    DisableWiFiSense                # EnableWiFiSense
+    # DisableSmartScreen            # EnableSmartScreen
+    DisableWebSearch                # EnableWebSearch
+    DisableAppSuggestions           # EnableAppSuggestions
+    DisableActivityHistory          # EnableActivityHistory
+    DisableBackgroundApps           # EnableBackgroundApps
+    DisableLocationTracking         # EnableLocationTracking
+    DisableMapUpdates               # EnableMapUpdates
+    DisableFeedback                 # EnableFeedback
+    DisableTailoredExperiences      # EnableTailoredExperiences
+    DisableAdvertisingID            # EnableAdvertisingID
+    DisableWebLangList              # EnableWebLangList
+    DisableCortana                  # EnableCortana
+    DisableErrorReporting           # EnableErrorReporting
+    SetP2PUpdateLocal               # SetP2PUpdateInternet          # SetP2PUpdateDisable
+    DisableDiagTrack                # EnableDiagTrack
+    DisableWAPPush                  # EnableWAPPush
+    HideRecentJumplists             # ShowRecentJumplists
 }
 
 
@@ -62,13 +66,32 @@ if(Confirm-Install 'Boxstarter::Essential::Security')
 {
     Write-BoxstarterMessage "Updating Security settings..."
 
-    SetCurrentNetworkPrivate
-    SetDEPOptOut
-    EnableF8BootMenu
-    EnableSharingMappedDrives
-    EnableAdminShares
-    EnableDefender
-    EnableCtrldFolderAccess
+    # SetUACLow                     # SetUACHigh
+    EnableSharingMappedDrives       # DisableSharingMappedDrives
+    DisableAdminShares              # EnableAdminShares
+    # DisableSMB1                   # EnableSMB1
+    # DisableSMBServer              # EnableSMBServer
+    # DisableLLMNR                  # EnableLLMNR
+    # DisableNCSIProbe              # EnableNCSIProbe
+    SetCurrentNetworkPrivate        # SetCurrentNetworkPublic
+    # SetUnknownNetworksPrivate     # SetUnknownNetworksPublic
+    # DisableNetDevicesAutoInst     # EnableNetDevicesAutoInst
+    # DisableFirewall               # EnableFirewall
+    # HideDefenderTrayIcon          # ShowDefenderTrayIcon
+    # DisableDefender               # EnableDefender
+    # DisableDefenderCloud          # EnableDefenderCloud
+    # EnableCtrldFolderAccess       # DisableCtrldFolderAccess
+    # EnableCIMemoryIntegrity       # DisableCIMemoryIntegrity
+    # EnableDefenderAppGuard        # DisableDefenderAppGuard
+    HideAccountProtectionWarn       # ShowAccountProtectionWarn
+    # DisableDownloadBlocking       # EnableDownloadBlocking
+    DisableScriptHost               # EnableScriptHost
+    EnableDotNetStrongCrypto        # DisableDotNetStrongCrypto
+    # EnableMeltdownCompatFlag      # DisableMeltdownCompatFlag
+    EnableF8BootMenu                # DisableF8BootMenu
+    # DisableBootRecovery           # EnableBootRecovery
+    # DisableRecoveryAndReset       # EnableRecoveryAndReset
+    SetDEPOptOut                    # SetDEPOptIn
 }
 
 
@@ -79,13 +102,27 @@ if(Confirm-Install 'Boxstarter::Essential::Service')
 {
     Write-BoxstarterMessage "Updating Service settings..."
 
-    DisableUpdateRestart
-    DisableSharedExperiences
-    DisableRemoteAssistance
-    EnableRemoteDesktop
-    DisableAutoplay
-    DisableAutorun
-    DisableFastStartup
+    # DisableUpdateMSRT             # EnableUpdateMSRT
+    # DisableUpdateDriver           # EnableUpdateDriver
+    DisableUpdateRestart            # EnableUpdateRestart
+    # DisableHomeGroups             # EnableHomeGroups
+    DisableSharedExperiences        # EnableSharedExperiences
+    DisableRemoteAssistance         # EnableRemoteAssistance
+    EnableRemoteDesktop             # DisableRemoteDesktop
+    DisableAutoplay                 # EnableAutoplay
+    DisableAutorun                  # EnableAutorun
+    # DisableRestorePoints          # EnableRestorePoints
+    # EnableStorageSense            # DisableStorageSense
+    # DisableDefragmentation        # EnableDefragmentation
+    # DisableSuperfetch             # EnableSuperfetch
+    # DisableIndexing               # EnableIndexing
+    # DisableNTFSLastAccess         # EnableNTFSLastAccess
+    # SetBIOSTimeUTC                # SetBIOSTimeLocal
+    # EnableHibernation             # DisableHibernation
+    # DisableSleepButton            # EnableSleepButton
+    # DisableSleepTimeout           # EnableSleepTimeout
+    DisableFastStartup              # EnableFastStartup
+    # DisableAutoRebootOnCrash      # EnableAutoRebootOnCrash
 }
 
 
@@ -96,12 +133,34 @@ if(Confirm-Install 'Boxstarter::Essential::UI')
 {
     Write-BoxstarterMessage "Updating UI settings..."
 
-    DisableStickyKeys
-    ShowTaskManagerDetails
-    ShowFileOperationsDetails
-    HideTaskbarPeopleIcon
-    EnableNumlock
-    DisableStartupSound
+    # DisableActionCenter           # EnableActionCenter
+    DisableLockScreen               # EnableLockScreen
+    # DisableLockScreenRS1          # EnableLockScreenRS1
+    # HideNetworkFromLockScreen     # ShowNetworkOnLockScreen
+    # HideShutdownFromLockScreen    # ShowShutdownOnLockScreen
+    # DisableAeroShake              # EnableAeroShake
+    DisableStickyKeys               # EnableStickyKeys
+    ShowTaskManagerDetails          # HideTaskManagerDetails
+    ShowFileOperationsDetails       # HideFileOperationsDetails
+    # EnableFileDeleteConfirm       # DisableFileDeleteConfirm
+    HideTaskbarSearch               # ShowTaskbarSearchIcon         # ShowTaskbarSearchBox
+    HideTaskView                    # ShowTaskView
+    # ShowSmallTaskbarIcons         # ShowLargeTaskbarIcons
+     SetTaskbarCombineAlways        # SetTaskbarCombineWhenFull      # SetTaskbarCombineNever
+    HideTaskbarPeopleIcon           # ShowTaskbarPeopleIcon
+    ShowTrayIcons                   # HideTrayIcons
+    DisableSearchAppInStore         # EnableSearchAppInStore
+    DisableNewAppPrompt             # EnableNewAppPrompt
+    # HideRecentlyAddedApps         # ShowRecentlyAddedApps
+    # SetControlPanelSmallIcons     # SetControlPanelLargeIcons     # SetControlPanelCategories
+    DisableShortcutInName           # EnableShortcutInName
+    SetVisualFXPerformance          # SetVisualFXAppearance
+    # EnableDarkTheme               # DisableDarkTheme
+    # AddENKeyboard                 # RemoveENKeyboard
+    EnableNumlock                   # DisableNumlock
+    # SetSoundSchemeNone            # SetSoundSchemeDefault
+    # DisableStartupSound           # EnableStartupSound
+    # DisableChangingSoundScheme    # EnableChangingSoundScheme
 }
 
 
@@ -112,29 +171,40 @@ if(Confirm-Install 'Boxstarter::Essential::UI-Preferences')
 {
     Write-BoxstarterMessage "Updating UI preferences..."
 
-    ShowKnownExtensions
-    ShowHiddenFiles
-    HideSyncNotifications
-    HideRecentShortcuts
-    SetExplorerThisPC
-    HideQuickAccess
-    ShowThisPCOnDesktop
-    DisableThumbnails
-    DisableThumbnailCache
-    DisableThumbsDBOnNetwork
 
-    HideTaskView
-    ShowLargeTaskbarIcons
-    SetTaskbarCombineAlways
-    HideTaskbarPeopleIcon
-
-    # Set-WindowsExplorerOptions parameters can be found in https://github.com/chocolatey/boxstarter/blob/master/Boxstarter.WinConfig/Set-WindowsExplorerOptions.ps1
-    # Disables the Quick Access location and shows Computer view when opening Windows Explorer
-    Set-WindowsExplorerOptions -EnableExpandToOpenFolder
-
-    # Taskbar on all monitors
-    Set-Registry -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced' -Name 'MMTaskbarEnabled' -Type 'DWord' -Value 1
-    Set-Registry -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced' -Name 'MMTaskbarMode' -Type 'DWord' -Value 1
+    ShowKnownExtensions             # HideKnownExtensions
+    ShowHiddenFiles                 # HideHiddenFiles
+    EnableNavPaneExpand             # DisableNavPaneExpand
+    # EnableFldrSeparateProcess     # DisableFldrSeparateProcess
+    # EnableRestoreFldrWindows      # DisableRestoreFldrWindows
+    # DisableSharingWizard          # EnableSharingWizard
+    # HideSelectCheckboxes          # ShowSelectCheckboxes
+    HideSyncNotifications           # ShowSyncNotifications
+    HideRecentShortcuts             # ShowRecentShortcuts
+    SetExplorerThisPC               # SetExplorerQuickAccess
+    HideQuickAccess                 # ShowQuickAccess
+    ShowThisPCOnDesktop             # HideThisPCFromDesktop
+    # HideUserFolderFromDesktop     # ShowUserFolderOnDesktop
+    # HideDesktopFromThisPC         # ShowDesktopInThisPC
+    # HideDesktopFromExplorer       # ShowDesktopInExplorer
+    # HideDocumentsFromThisPC       # ShowDocumentsInThisPC
+    # HideDocumentsFromExplorer     # ShowDocumentsInExplorer
+    # HideDownloadsFromThisPC       # ShowDownloadsInThisPC
+    # HideDownloadsFromExplorer     # ShowDownloadsInExplorer
+    # HideMusicFromThisPC           # ShowMusicInThisPC
+    # HideMusicFromExplorer         # ShowMusicInExplorer
+    # HidePicturesFromThisPC        # ShowPicturesInThisPC
+    # HidePicturesFromExplorer      # ShowPicturesInExplorer
+    # HideVideosFromThisPC          # ShowVideosInThisPC
+    # HideVideosFromExplorer        # ShowVideosInExplorer
+    Hide3DObjectsFromThisPC         # Show3DObjectsInThisPC
+    Hide3DObjectsFromExplorer       # Show3DObjectsInExplorer
+    # HideIncludeInLibraryMenu      # ShowIncludeInLibraryMenu
+    # HideGiveAccessToMenu          # ShowGiveAccessToMenu
+    # HideShareMenu                 # ShowShareMenu
+    # DisableThumbnails             # EnableThumbnails
+    DisableThumbnailCache           # EnableThumbnailCache
+    DisableThumbsDBOnNetwork        # EnableThumbsDBOnNetwork
 }
 
 
@@ -145,9 +215,27 @@ if(Confirm-Install 'Boxstarter::Essential::Application')
 {
     Write-BoxstarterMessage "Updating Application preferences..."
 
-    UninstallXPSPrinter
-    RemoveFaxPrinter
-    UninstallFaxAndScan
+    # DisableOneDrive               # EnableOneDrive
+    # UninstallOneDrive             # InstallOneDrive
+    # UninstallMsftBloat            # InstallMsftBloat
+    # UninstallThirdPartyBloat      # InstallThirdPartyBloat
+    # UninstallWindowsStore         # InstallWindowsStore
+    DisableXboxFeatures             # EnableXboxFeatures
+    DisableAdobeFlash               # EnableAdobeFlash
+    DisableEdgeShortcutCreation     # EnableEdgeShortcutCreation
+    # UninstallMediaPlayer          # InstallMediaPlayer
+    # UninstallInternetExplorer     # InstallInternetExplorer
+    # UninstallWorkFolders          # InstallWorkFolders
+    # UninstallPowerShellV2         # InstallPowerShellV2
+    # InstallLinuxSubsystem         # UninstallLinuxSubsystem
+    # InstallHyperV                 # UninstallHyperV
+    # InstallNET23                  # UninstallNET23
+    SetPhotoViewerAssociation       # UnsetPhotoViewerAssociation
+    AddPhotoViewerOpenWith          # RemovePhotoViewerOpenWith
+    # UninstallPDFPrinter           # InstallPDFPrinter
+    UninstallXPSPrinter             # InstallXPSPrinter
+    RemoveFaxPrinter                # AddFaxPrinter
+    UninstallFaxAndScan             # InstallFaxAndScan
 }
 
 
@@ -209,17 +297,19 @@ if(Confirm-Install 'Boxstarter::Essential::Windows-Update')
 Set-DefaultOption 'Boxstarter::Essential::Remove-Apps'                                      'true'
 
 Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.3DBuilder'                      'true'
-Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.Appconnector'                   'false'
+Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.Appconnector'                   'true'
 Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.BingFinance'                    'true'
 Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.BingFoodAndDrink'               'true'
 Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.BingHealthAndFitness'           'true'
 Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.BingNews'                       'true'
 Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.BingSports'                     'true'
+Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.BingTranslator'                 'true'
 Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.BingTravel'                     'true'
 Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.BingWeather'                    'true'
 Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.CommsPhone'                     'true'
 Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.ConnectivityStore'              'true'
-Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.DesktopAppInstaller'            'false'
+Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.DesktopAppInstaller'            'false' # Don't remove
+Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.GetHelp'                        'true'
 Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.Getstarted'                     'true'
 Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.Messaging'                      'true'
 Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.Microsoft3DViewer'              'true'
@@ -228,6 +318,7 @@ Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.MicrosoftPowerBIForW
 Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.MicrosoftSolitaireCollection'   'true'
 Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.MicrosoftStickyNotes'           'true'
 Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.MinecraftUWP'                   'true'
+Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.MixedReality.Portal'            'true'
 Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.MSPaint'                        'true'
 Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.NetworkSpeedTest'               'true'
 Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.Office.OneNote'                 'true'
@@ -237,16 +328,19 @@ Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.OneConnect'         
 Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.OneDrive'                       'true'
 Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.People'                         'true'
 Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.Print3D'                        'true'
+Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.RemoteDesktop'                  'false'
+Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.ScreenSketch'                   'true'
 Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.SkypeApp'                       'true'
-Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.StorePurchaseApp'               'false'
+Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.StorePurchaseApp'               'false' # Don't remove
 Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.Todos'                          'true'
 Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.Wallet'                         'true'
+Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.WebMediaExtensions'             'true'
 Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.Whiteboard'                     'true'
 Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.Windows.Photos'                 'false'
 Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.Windows.CapturePicker'          'false'
-Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.Windows.CloudExperienceHost'    'true'
-Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.Windows.PeopleExperienceHost'   'true'
-Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.WindowsAlarms'                  'false'
+Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.Windows.CloudExperienceHost'    'false' # Don't remove
+Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.Windows.PeopleExperienceHost'   'false' # Don't remove
+Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.WindowsAlarms'                  'true'
 Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.WindowsCalculator'              'false'
 Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.WindowsCamera'                  'true'
 Set-DefaultOption 'Boxstarter::Essential::Remove::microsoft.windowscommunicationsapps'      'true'
@@ -255,16 +349,18 @@ Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.WindowsMaps'        
 Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.WindowsPhone'                   'true'
 Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.WindowsReadingList'             'true'
 Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.WindowsSoundRecorder'           'true'
-Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.WindowsStore'                   'false'
+Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.WindowsStore'                   'false' # Don't remove
 Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.XboxApp'                        'true'
 Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.XboxGameOverlay'                'true'
 Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.XboxGamingOverlay'              'true'
 Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.XboxIdentityProvider'           'true'
 Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.XboxSpeechToTextOverlay'        'true'
+Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.Xbox.TCUI'                      'true'
+Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.YourPhone'                      'true'
 Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.ZuneMusic'                      'true'
 Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.ZuneVideo'                      'true'
 
-Set-DefaultOption 'Boxstarter::Essential::windows.immersivecontrolpanel'                     'true'
+Set-DefaultOption 'Boxstarter::Essential::Remove::windows.immersivecontrolpanel'            'true'
 
 Set-DefaultOption 'Boxstarter::Essential::Remove::Autodesk'                                 'true'
 Set-DefaultOption 'Boxstarter::Essential::Remove::BubbleWitch'                              'true'
@@ -288,11 +384,13 @@ if(Get-OptionBool 'Boxstarter::Essential::Remove::Microsoft.BingFoodAndDrink')  
 if(Get-OptionBool 'Boxstarter::Essential::Remove::Microsoft.BingHealthAndFitness')          { $apps += 'Microsoft.BingHealthAndFitness' }
 if(Get-OptionBool 'Boxstarter::Essential::Remove::Microsoft.BingNews')                      { $apps += 'Microsoft.BingNews' }
 if(Get-OptionBool 'Boxstarter::Essential::Remove::Microsoft.BingSports')                    { $apps += 'Microsoft.BingSports' }
+if(Get-OptionBool 'Boxstarter::Essential::Remove::Microsoft.BingTranslator')                { $apps += 'Microsoft.BingTranslator' }
 if(Get-OptionBool 'Boxstarter::Essential::Remove::Microsoft.BingTravel')                    { $apps += 'Microsoft.BingTravel' }
 if(Get-OptionBool 'Boxstarter::Essential::Remove::Microsoft.BingWeather')                   { $apps += 'Microsoft.BingWeather' }
 if(Get-OptionBool 'Boxstarter::Essential::Remove::Microsoft.CommsPhone')                    { $apps += 'Microsoft.CommsPhone' }
 if(Get-OptionBool 'Boxstarter::Essential::Remove::Microsoft.ConnectivityStore')             { $apps += 'Microsoft.ConnectivityStore' }
 if(Get-OptionBool 'Boxstarter::Essential::Remove::Microsoft.DesktopAppInstaller')           { $apps += 'Microsoft.DesktopAppInstaller' }
+if(Get-OptionBool 'Boxstarter::Essential::Remove::Microsoft.GetHelp')                       { $apps += 'Microsoft.GetHelp' }
 if(Get-OptionBool 'Boxstarter::Essential::Remove::Microsoft.Getstarted')                    { $apps += 'Microsoft.Getstarted' }
 if(Get-OptionBool 'Boxstarter::Essential::Remove::Microsoft.Messaging')                     { $apps += 'Microsoft.Messaging' }
 if(Get-OptionBool 'Boxstarter::Essential::Remove::Microsoft.Microsoft3DViewer')             { $apps += 'Microsoft.Microsoft3DViewer' }
@@ -301,6 +399,7 @@ if(Get-OptionBool 'Boxstarter::Essential::Remove::Microsoft.MicrosoftPowerBIForW
 if(Get-OptionBool 'Boxstarter::Essential::Remove::Microsoft.MicrosoftSolitaireCollection')  { $apps += 'Microsoft.MicrosoftSolitaireCollection' }
 if(Get-OptionBool 'Boxstarter::Essential::Remove::Microsoft.MicrosoftStickyNotes')          { $apps += 'Microsoft.MicrosoftStickyNotes' }
 if(Get-OptionBool 'Boxstarter::Essential::Remove::Microsoft.MinecraftUWP')                  { $apps += 'Microsoft.MinecraftUWP' }
+if(Get-OptionBool 'Boxstarter::Essential::Remove::Microsoft.MixedReality.Portal')           { $apps += 'Microsoft.MixedReality.Portal' }
 if(Get-OptionBool 'Boxstarter::Essential::Remove::Microsoft.MSPaint')                       { $apps += 'Microsoft.MSPaint' }
 if(Get-OptionBool 'Boxstarter::Essential::Remove::Microsoft.NetworkSpeedTest')              { $apps += 'Microsoft.NetworkSpeedTest' }
 if(Get-OptionBool 'Boxstarter::Essential::Remove::Microsoft.Office.OneNote')                { $apps += 'Microsoft.Office.OneNote' }
@@ -334,6 +433,7 @@ if(Get-OptionBool 'Boxstarter::Essential::Remove::Microsoft.XboxGameOverlay')   
 if(Get-OptionBool 'Boxstarter::Essential::Remove::Microsoft.XboxGamingOverlay')             { $apps += 'Microsoft.XboxGamingOverlay' }
 if(Get-OptionBool 'Boxstarter::Essential::Remove::Microsoft.XboxIdentityProvider')          { $apps += 'Microsoft.XboxIdentityProvider' }
 if(Get-OptionBool 'Boxstarter::Essential::Remove::Microsoft.XboxSpeechToTextOverlay')       { $apps += 'Microsoft.XboxSpeechToTextOverlay' }
+if(Get-OptionBool 'Boxstarter::Essential::Remove::Microsoft.Xbox.TCUI')                     { $apps += 'Microsoft.Xbox.TCUI' }
 if(Get-OptionBool 'Boxstarter::Essential::Remove::Microsoft.ZuneMusic')                     { $apps += 'Microsoft.ZuneMusic' }
 if(Get-OptionBool 'Boxstarter::Essential::Remove::Microsoft.ZuneVideo')                     { $apps += 'Microsoft.ZuneVideo' }
 
@@ -374,6 +474,13 @@ if(Get-OptionBool 'Boxstarter::Essential::Remove-Apps') {
         Remove-Registry 'HKEY_LOCAL_MACHINE\SOFTWARE\Classes\SystemFileAssociations\.jpeg\Shell'
     }
 
+    # Xbox
+    if(Get-OptionBool 'Boxstarter::Essential::Remove::Microsoft.XboxApp') {
+        Set-Registry -Path 'HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\GameDVR' -Name 'AppCaptureEnabled' -Type 'DWord' -Value 0
+        Set-Registry -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\GameDVR" -Name "AllowGameDVR" -Type 'DWord' -Value 0
+        Set-Registry -Path 'HKCU:\System\GameConfigStore' -Name 'GameDVR_Enabled' -Type 'DWord' -Value 0
+    }
+
     # remove McAfee Security App
     if(Get-OptionBool 'Boxstarter::Essential::Remove::McAfee') {
         $mcafee = Get-ChildItem 'HKLM:\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall' | ForEach-Object { Get-ItemProperty $_.PSPath } | Where-Object { $_ -match "McAfee Security" } | Select-Object UninstallString
@@ -382,15 +489,3 @@ if(Get-OptionBool 'Boxstarter::Essential::Remove-Apps') {
             Start-Process "C:\Program Files\McAfee\MSC\mcuihost.exe" -arg "$mcafee" -Wait
         }
     }
-}
-
-
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#    Default options
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-if(Confirm-Install 'Boxstarter::Essential::Disable-BingSearch')         { Disable-BingSearch  }
-if(Confirm-Install 'Boxstarter::Essential::Disable-GameBarTips')        { Disable-GameBarTips }
-if(Confirm-Install 'Boxstarter::Essential::Disable-XboxGamebar') {
-    Set-Registry -Path 'HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\GameDVR' -Name 'AppCaptureEnabled' -Type 'DWord' -Value 0
-    Set-Registry -Path 'HKCU:\System\GameConfigStore' -Name 'GameDVR_Enabled' -Type 'DWord' -Value 0
-}

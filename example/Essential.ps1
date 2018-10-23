@@ -37,11 +37,7 @@ $options = @(
     'Boxstarter::Essential::TaskbarOptions=true'
     'Boxstarter::Essential::CornerNavigationOptions=true'
     'Boxstarter::Essential::Windows-Update=true'
-    'Boxstarter::Essential::Disable-BingSearch=true'
-    'Boxstarter::Essential::Disable-GameBarTips=true'
-    'Boxstarter::Essential::Disable-XboxGamebar=true'
     'Boxstarter::Essential::Remove-Apps=true'
-    'Boxstarter::Essential::Remove::Microsoft.OneDrive=true'
 )
 
 # Download my boxstarter bootstrap
