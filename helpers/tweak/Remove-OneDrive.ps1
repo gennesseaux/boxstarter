@@ -2,6 +2,10 @@ function Remove-OneDrive
 {
     Write-BoxstarterMessage 'Removing OneDrive...'
 
+    Write-Host 'Disable OneDrive via Group Policies'
+    Set-Registry -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\OneDrive' -Name 'DisableFileSyncNGSC' -Type 'DWord' -Value 1
+    Set-Registry -Path 'HKLM:\SOFTWARE\Wow6432Node\Policies\Microsoft\Windows\OneDrive' -Name 'DisableFileSyncNGSC' -Type 'DWord' -Value 1
+
     Write-Host 'Stop OneDrive process'
     Stop-Process -Name 'OneDrive' -Force -ErrorAction SilentlyContinue
     Start-Sleep -s 2
@@ -17,9 +21,6 @@ function Remove-OneDrive
     Write-Host 'Stop Explorer process'
     Stop-Process -Name 'explorer' -Force -ErrorAction SilentlyContinue
 	Start-Sleep -s 2
-
-    Write-Host 'Disable OneDrive via Group Policies'
-    Set-Registry -Path 'HKLM:\SOFTWARE\Wow6432Node\Policies\Microsoft\Windows\OneDrive' -Name 'DisableFileSyncNGSC' -Type 'DWord' -Value 1
 
     Write-Host 'Removing OneDrive leftovers trash'
     Remove-Item -Path "$env:USERPROFILE\OneDrive" -Force -Recurse -ErrorAction SilentlyContinue
