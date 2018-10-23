@@ -6,32 +6,35 @@
 ##########
 
 ### Explorer UI Tweaks ###
-# "ShowKnownExtensions",            # "HideKnownExtensions",
-# "ShowHiddenFiles",                # "HideHiddenFiles",
-# "HideSelectCheckboxes",           # "ShowSelectCheckboxes",
-# "HideSyncNotifications"           # "ShowSyncNotifications",
-# "HideRecentShortcuts",            # "ShowRecentShortcuts",
-# "SetExplorerThisPC",              # "SetExplorerQuickAccess",
-# "HideQuickAccess",                # "ShowQuickAccess",
-# "ShowThisPCOnDesktop",            # "HideThisPCFromDesktop",
-# "ShowUserFolderOnDesktop",        # "HideUserFolderFromDesktop",
-# "HideDesktopFromThisPC",          # "ShowDesktopInThisPC",
-# "HideDesktopFromExplorer",        # "ShowDesktopInExplorer",
-# "HideDocumentsFromThisPC",        # "ShowDocumentsInThisPC",
-# "HideDocumentsFromExplorer",      # "ShowDocumentsInExplorer",
-# "HideDownloadsFromThisPC",        # "ShowDownloadsInThisPC",
-# "HideDownloadsFromExplorer",      # "ShowDownloadsInExplorer",
-# "HideMusicFromThisPC",            # "ShowMusicInThisPC",
-# "HideMusicFromExplorer",          # "ShowMusicInExplorer",
-# "HidePicturesFromThisPC",         # "ShowPicturesInThisPC",
-# "HidePicturesFromExplorer",       # "ShowPicturesInExplorer",
-# "HideVideosFromThisPC",           # "ShowVideosInThisPC",
-# "HideVideosFromExplorer",         # "ShowVideosInExplorer",
-# "Hide3DObjectsFromThisPC",        # "Show3DObjectsInThisPC",
-# "Hide3DObjectsFromExplorer",      # "Show3DObjectsInExplorer",
-# "DisableThumbnails",              # "EnableThumbnails",
-# "DisableThumbnailCache",          # "EnableThumbnailCache",
-# "DisableThumbsDBOnNetwork",       # "EnableThumbsDBOnNetwork",
+# ShowKnownExtensions            # HideKnownExtensions
+# ShowHiddenFiles                # HideHiddenFiles
+# HideSelectCheckboxes           # ShowSelectCheckboxes
+# HideSyncNotifications          # ShowSyncNotifications
+# HideRecentShortcuts            # ShowRecentShortcuts
+# SetExplorerThisPC              # SetExplorerQuickAccess
+# HideQuickAccess                # ShowQuickAccess
+# ShowThisPCOnDesktop            # HideThisPCFromDesktop
+# ShowUserFolderOnDesktop        # HideUserFolderFromDesktop
+# HideDesktopFromThisPC          # ShowDesktopInThisPC
+# HideDesktopFromExplorer        # ShowDesktopInExplorer
+# HideDocumentsFromThisPC        # ShowDocumentsInThisPC
+# HideDocumentsFromExplorer      # ShowDocumentsInExplorer
+# HideDownloadsFromThisPC        # ShowDownloadsInThisPC
+# HideDownloadsFromExplorer      # ShowDownloadsInExplorer
+# HideMusicFromThisPC            # ShowMusicInThisPC
+# HideMusicFromExplorer          # ShowMusicInExplorer
+# HidePicturesFromThisPC         # ShowPicturesInThisPC
+# HidePicturesFromExplorer       # ShowPicturesInExplorer
+# HideVideosFromThisPC           # ShowVideosInThisPC
+# HideVideosFromExplorer         # ShowVideosInExplorer
+# Hide3DObjectsFromThisPC        # Show3DObjectsInThisPC
+# Hide3DObjectsFromExplorer      # Show3DObjectsInExplorer
+# HideIncludeInLibraryMenu       # ShowIncludeInLibraryMenu
+# HideGiveAccessToMenu           # ShowGiveAccessToMenu
+# HideShareMenu                  # ShowShareMenu
+# DisableThumbnails              # EnableThumbnails
+# DisableThumbnailCache          # EnableThumbnailCache
+# DisableThumbsDBOnNetwork       # EnableThumbsDBOnNetwork
 
 ##########
 # Explorer UI Tweaks
@@ -59,6 +62,54 @@ Function ShowHiddenFiles {
 Function HideHiddenFiles {
 	Write-Output "Hiding hidden files..."
 	Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" -Name "Hidden" -Type DWord -Value 2
+}
+
+# Enable navigation pane expanding to current folder
+Function EnableNavPaneExpand {
+	Write-Output "Enabling navigation pane expanding to current folder..."
+	Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" -Name "NavPaneExpandToCurrentFolder" -Type DWord -Value 1
+}
+
+# Disable navigation pane expanding to current folder
+Function DisableNavPaneExpand {
+	Write-Output "Disabling navigation pane expanding to current folder..."
+	Remove-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" -Name "NavPaneExpandToCurrentFolder" -ErrorAction SilentlyContinue
+}
+
+# Enable launching folder windows in a separate process
+Function EnableFldrSeparateProcess {
+	Write-Output "Enabling launching folder windows in a separate process..."
+	Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" -Name "SeparateProcess" -Type DWord -Value 1
+}
+
+# Disable launching folder windows in a separate process
+Function DisableFldrSeparateProcess {
+	Write-Output "Disabling launching folder windows in a separate process..."
+	Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" -Name "SeparateProcess" -Type DWord -Value 0
+}
+
+# Enable restoring previous folder windows at logon
+Function EnableRestoreFldrWindows {
+	Write-Output "Enabling restoring previous folder windows at logon..."
+	Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" -Name "PersistBrowsers" -Type DWord -Value 1
+}
+
+# Disable restoring previous folder windows at logon
+Function DisableRestoreFldrWindows {
+	Write-Output "Disabling restoring previous folder windows at logon..."
+	Remove-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" -Name "PersistBrowsers" -ErrorAction SilentlyContinue
+}
+
+# Disable Sharing Wizard
+Function DisableSharingWizard {
+	Write-Output "Disabling Sharing Wizard..."
+	Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" -Name "SharingWizardOn" -Type DWord -Value 0
+}
+
+# Enable Sharing Wizard
+Function EnableSharingWizard {
+	Write-Output "Enabling Sharing Wizard..."
+	Remove-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" -Name "SharingWizardOn" -ErrorAction SilentlyContinue
 }
 
 # Hide item selection checkboxes
@@ -383,6 +434,73 @@ Function Show3DObjectsInExplorer {
 	Write-Output "Showing 3D Objects icon in Explorer namespace..."
 	Remove-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\FolderDescriptions\{31C0DD25-9439-4F12-BF41-7FF4EDA38722}\PropertyBag" -Name "ThisPCPolicy" -ErrorAction SilentlyContinue
 	Remove-ItemProperty -Path "HKLM:\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Explorer\FolderDescriptions\{31C0DD25-9439-4F12-BF41-7FF4EDA38722}\PropertyBag" -Name "ThisPCPolicy" -ErrorAction SilentlyContinue
+}
+
+# Hide 'Include in library' context menu item
+Function HideIncludeInLibraryMenu {
+	Write-Output "Hiding 'Include in library' context menu item..."
+	If (!(Test-Path "HKCR:")) {
+		New-PSDrive -Name "HKCR" -PSProvider "Registry" -Root "HKEY_CLASSES_ROOT" | Out-Null
+	}
+	Remove-Item -Path "HKCR:\Folder\ShellEx\ContextMenuHandlers\Library Location" -ErrorAction SilentlyContinue
+}
+
+# Show 'Include in library' context menu item
+Function ShowIncludeInLibraryMenu {
+	Write-Output "Showing 'Include in library' context menu item..."
+	If (!(Test-Path "HKCR:")) {
+		New-PSDrive -Name "HKCR" -PSProvider "Registry" -Root "HKEY_CLASSES_ROOT" | Out-Null
+	}
+	New-Item -Path "HKCR:\Folder\ShellEx\ContextMenuHandlers\Library Location" -ErrorAction SilentlyContinue | Out-Null
+	Set-ItemProperty -Path "HKCR:\Folder\ShellEx\ContextMenuHandlers\Library Location" -Name "(Default)" -Type String -Value "{3dad6c5d-2167-4cae-9914-f99e41c12cfa}"
+}
+
+# Hide 'Give access to' (until 1703 'Share With') context menu item.
+Function HideGiveAccessToMenu {
+	Write-Output "Hiding 'Give access to' context menu item..."
+	If (!(Test-Path "HKCR:")) {
+		New-PSDrive -Name "HKCR" -PSProvider "Registry" -Root "HKEY_CLASSES_ROOT" | Out-Null
+	}
+	Remove-Item -LiteralPath "HKCR:\*\shellex\ContextMenuHandlers\Sharing" -ErrorAction SilentlyContinue
+	Remove-Item -Path "HKCR:\Directory\Background\shellex\ContextMenuHandlers\Sharing" -ErrorAction SilentlyContinue
+	Remove-Item -Path "HKCR:\Directory\shellex\ContextMenuHandlers\Sharing" -ErrorAction SilentlyContinue
+	Remove-Item -Path "HKCR:\Drive\shellex\ContextMenuHandlers\Sharing" -ErrorAction SilentlyContinue
+
+}
+
+# Show 'Give access to' (until 1703 'Share With') context menu item.
+Function ShowGiveAccessToMenu {
+	Write-Output "Showing 'Give access to' context menu item..."
+	If (!(Test-Path "HKCR:")) {
+		New-PSDrive -Name "HKCR" -PSProvider "Registry" -Root "HKEY_CLASSES_ROOT" | Out-Null
+	}
+	New-Item -Path "HKCR:\*\shellex\ContextMenuHandlers\Sharing" -ErrorAction SilentlyContinue | Out-Null
+	Set-ItemProperty -LiteralPath "HKCR:\*\shellex\ContextMenuHandlers\Sharing" -Name "(Default)" -Type String -Value "{f81e9010-6ea4-11ce-a7ff-00aa003ca9f6}"
+	New-Item -Path "HKCR:\Directory\Background\shellex\ContextMenuHandlers\Sharing" -ErrorAction SilentlyContinue | Out-Null
+	Set-ItemProperty -Path "HKCR:\Directory\Background\shellex\ContextMenuHandlers\Sharing" -Name "(Default)" -Type String -Value "{f81e9010-6ea4-11ce-a7ff-00aa003ca9f6}"
+	New-Item -Path "HKCR:\Directory\shellex\ContextMenuHandlers\Sharing" -ErrorAction SilentlyContinue | Out-Null
+	Set-ItemProperty -Path "HKCR:\Directory\shellex\ContextMenuHandlers\Sharing" -Name "(Default)" -Type String -Value "{f81e9010-6ea4-11ce-a7ff-00aa003ca9f6}"
+	New-Item -Path "HKCR:\Drive\shellex\ContextMenuHandlers\Sharing" -ErrorAction SilentlyContinue | Out-Null
+	Set-ItemProperty -Path "HKCR:\Drive\shellex\ContextMenuHandlers\Sharing" -Name "(Default)" -Type String -Value "{f81e9010-6ea4-11ce-a7ff-00aa003ca9f6}"
+}
+
+# Hide 'Share' context menu item. Applicable since 1709
+Function HideShareMenu {
+	Write-Output "Hiding 'Share' context menu item..."
+	If (!(Test-Path "HKCR:")) {
+		New-PSDrive -Name "HKCR" -PSProvider "Registry" -Root "HKEY_CLASSES_ROOT" | Out-Null
+	}
+	Remove-Item -LiteralPath "HKCR:\*\shellex\ContextMenuHandlers\ModernSharing" -ErrorAction SilentlyContinue
+}
+
+# Show 'Share' context menu item. Applicable since 1709
+Function ShowShareMenu {
+	Write-Output "Showing 'Share' context menu item..."
+	If (!(Test-Path "HKCR:")) {
+		New-PSDrive -Name "HKCR" -PSProvider "Registry" -Root "HKEY_CLASSES_ROOT" | Out-Null
+	}
+	New-Item -Path "HKCR:\*\shellex\ContextMenuHandlers\ModernSharing" -ErrorAction SilentlyContinue | Out-Null
+	Set-ItemProperty -LiteralPath "HKCR:\*\shellex\ContextMenuHandlers\ModernSharing" -Name "(Default)" -Type String -Value "{e2bf9676-5f8f-435c-97eb-11607a5bedf7}"
 }
 
 # Disable thumbnails, show only file extension icons

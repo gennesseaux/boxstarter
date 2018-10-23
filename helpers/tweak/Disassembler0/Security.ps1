@@ -6,26 +6,32 @@
 ##########
 
 	### Security Tweaks ###
-	# "SetUACLow",                      # "SetUACHigh",
-	# "EnableSharingMappedDrives",      # "DisableSharingMappedDrives",
-	# "DisableAdminShares",             # "EnableAdminShares",
-	# "DisableSMB1",                    # "EnableSMB1",
-	# "DisableSMBServer",               # "EnableSMBServer",
-	# "DisableLLMNR",                   # "EnableLLMNR",
-	# "DisableNCSIProbe",               # "EnableNCSIProbe",
-	# "SetCurrentNetworkPrivate",       # "SetCurrentNetworkPublic",
-	# "SetUnknownNetworksPrivate",      # "SetUnknownNetworksPublic",
-	# "DisableNetDevicesAutoInst",      # "EnableNetDevicesAutoInst",
-	# "EnableCtrldFolderAccess",        # "DisableCtrldFolderAccess",
-	# "DisableFirewall",                # "EnableFirewall",
-	# "DisableDefender",                # "EnableDefender",
-	# "DisableDefenderCloud",           # "EnableDefenderCloud",
-	# "EnableF8BootMenu",               # "DisableF8BootMenu",
-	# "SetDEPOptOut",                   # "SetDEPOptIn",
-	# "EnableCIMemoryIntegrity",        # "DisableCIMemoryIntegrity",
-	# "DisableScriptHost",              # "EnableScriptHost",
-	# "EnableDotNetStrongCrypto",       # "DisableDotNetStrongCrypto",
-    # "EnableMeltdownCompatFlag"        # "DisableMeltdownCompatFlag",
+	# SetUACLow                      # SetUACHigh
+	# EnableSharingMappedDrives      # DisableSharingMappedDrives
+	# DisableAdminShares             # EnableAdminShares
+	# DisableSMB1                    # EnableSMB1
+	# DisableSMBServer               # EnableSMBServer
+	# DisableLLMNR                   # EnableLLMNR
+	# DisableNCSIProbe               # EnableNCSIProbe
+	# SetCurrentNetworkPrivate       # SetCurrentNetworkPublic
+	# SetUnknownNetworksPrivate      # SetUnknownNetworksPublic
+    # DisableNetDevicesAutoInst      # EnableNetDevicesAutoInst
+    # DisableFirewall                # EnableFirewall
+    # HideDefenderTrayIcon           # ShowDefenderTrayIcon
+	# DisableDefender                # EnableDefender
+	# DisableDefenderCloud           # EnableDefenderCloud
+	# EnableCtrldFolderAccess        # DisableCtrldFolderAccess
+	# EnableCIMemoryIntegrity        # DisableCIMemoryIntegrity
+	# EnableDefenderAppGuard         # DisableDefenderAppGuard
+	# HideAccountProtectionWarn      # ShowAccountProtectionWarn
+	# DisableDownloadBlocking        # EnableDownloadBlocking
+	# DisableScriptHost              # EnableScriptHost
+	# EnableDotNetStrongCrypto       # DisableDotNetStrongCrypto
+    # EnableMeltdownCompatFlag       # DisableMeltdownCompatFlag
+	# EnableF8BootMenu               # DisableF8BootMenu
+	# DisableBootRecovery            # EnableBootRecovery
+	# DisableRecoveryAndReset        # EnableRecoveryAndReset
+	# SetDEPOptOut                   # SetDEPOptIn
 
 ##########
 # Security Tweaks
@@ -165,18 +171,6 @@ Function EnableNetDevicesAutoInst {
 	Remove-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\NcdAutoSetup\Private" -Name "AutoSetup" -ErrorAction SilentlyContinue
 }
 
-# Enable Controlled Folder Access (Defender Exploit Guard feature) - Applicable to 1709 or newer, requires Windows Defender to be enabled
-Function EnableCtrldFolderAccess {
-	Write-Output "Enabling Controlled Folder Access..."
-	Set-MpPreference -EnableControlledFolderAccess Enabled
-}
-
-# Disable Controlled Folder Access (Defender Exploit Guard feature) - Applicable to 1709 or newer, requires Windows Defender to be enabled
-Function DisableCtrldFolderAccess {
-	Write-Output "Disabling Controlled Folder Access..."
-	Set-MpPreference -EnableControlledFolderAccess Disabled
-}
-
 # Disable Firewall
 Function DisableFirewall {
 	Write-Output "Disabling Firewall..."
@@ -190,6 +184,33 @@ Function DisableFirewall {
 Function EnableFirewall {
 	Write-Output "Enabling Firewall..."
 	Remove-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\WindowsFirewall\StandardProfile" -Name "EnableFirewall" -ErrorAction SilentlyContinue
+}
+
+# Hide Windows Defender SysTray icon
+Function HideDefenderTrayIcon {
+	Write-Output "Hiding Windows Defender SysTray icon..."
+	If (!(Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender Security Center\Systray")) {
+		New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender Security Center\Systray" -Force | Out-Null
+	}
+	Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender Security Center\Systray" -Name "HideSystray" -Type DWord -Value 1
+	If ([System.Environment]::OSVersion.Version.Build -eq 14393) {
+		Remove-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Run" -Name "WindowsDefender" -ErrorAction SilentlyContinue
+	} ElseIf ([System.Environment]::OSVersion.Version.Build -ge 15063) {
+		Remove-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Run" -Name "SecurityHealth" -ErrorAction SilentlyContinue
+	}
+}
+
+# Show Windows Defender SysTray icon
+Function ShowDefenderTrayIcon {
+	Write-Output "Showing Windows Defender SysTray icon..."
+	Remove-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender Security Center\Systray" -Name "HideSystray" -ErrorAction SilentlyContinue
+	If ([System.Environment]::OSVersion.Version.Build -eq 14393) {
+		Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Run" -Name "WindowsDefender" -Type ExpandString -Value "`"%ProgramFiles%\Windows Defender\MSASCuiL.exe`""
+	} ElseIf ([System.Environment]::OSVersion.Version.Build -ge 15063 -And [System.Environment]::OSVersion.Version.Build -le 17134) {
+		Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Run" -Name "SecurityHealth" -Type ExpandString -Value "%ProgramFiles%\Windows Defender\MSASCuiL.exe"
+	} ElseIf ([System.Environment]::OSVersion.Version.Build -ge 17763) {
+		Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Run" -Name "SecurityHealth" -Type ExpandString -Value "%windir%\system32\SecurityHealthSystray.exe"
+	}
 }
 
 # Disable Windows Defender
@@ -212,8 +233,10 @@ Function EnableDefender {
 	Remove-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender" -Name "DisableAntiSpyware" -ErrorAction SilentlyContinue
 	If ([System.Environment]::OSVersion.Version.Build -eq 14393) {
 		Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Run" -Name "WindowsDefender" -Type ExpandString -Value "`"%ProgramFiles%\Windows Defender\MSASCuiL.exe`""
-	} ElseIf ([System.Environment]::OSVersion.Version.Build -ge 15063) {
-		Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Run" -Name "SecurityHealth" -Type ExpandString -Value "`"%ProgramFiles%\Windows Defender\MSASCuiL.exe`""
+	} ElseIf ([System.Environment]::OSVersion.Version.Build -ge 15063 -And [System.Environment]::OSVersion.Version.Build -le 17134) {
+		Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Run" -Name "SecurityHealth" -Type ExpandString -Value "%ProgramFiles%\Windows Defender\MSASCuiL.exe"
+	} ElseIf ([System.Environment]::OSVersion.Version.Build -ge 17763) {
+		Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Run" -Name "SecurityHealth" -Type ExpandString -Value "%windir%\system32\SecurityHealthSystray.exe"
 	}
 }
 
@@ -234,31 +257,19 @@ Function EnableDefenderCloud {
 	Remove-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender\Spynet" -Name "SubmitSamplesConsent" -ErrorAction SilentlyContinue
 }
 
-# Enable F8 boot menu options
-Function EnableF8BootMenu {
-	Write-Output "Enabling F8 boot menu options..."
-	bcdedit /set `{current`} bootmenupolicy Legacy | Out-Null
+# Enable Controlled Folder Access (Defender Exploit Guard feature) - Applicable since 1709, requires Windows Defender to be enabled
+Function EnableCtrldFolderAccess {
+	Write-Output "Enabling Controlled Folder Access..."
+	Set-MpPreference -EnableControlledFolderAccess Enabled -ErrorAction SilentlyContinue
 }
 
-# Disable F8 boot menu options
-Function DisableF8BootMenu {
-	Write-Output "Disabling F8 boot menu options..."
-	bcdedit /set `{current`} bootmenupolicy Standard | Out-Null
+# Disable Controlled Folder Access (Defender Exploit Guard feature) - Applicable since 1709, requires Windows Defender to be enabled
+Function DisableCtrldFolderAccess {
+	Write-Output "Disabling Controlled Folder Access..."
+	Set-MpPreference -EnableControlledFolderAccess Disabled -ErrorAction SilentlyContinue
 }
 
-# Set Data Execution Prevention (DEP) policy to OptOut
-Function SetDEPOptOut {
-	Write-Output "Setting Data Execution Prevention (DEP) policy to OptOut..."
-	bcdedit /set `{current`} nx OptOut | Out-Null
-}
-
-# Set Data Execution Prevention (DEP) policy to OptIn
-Function SetDEPOptIn {
-	Write-Output "Setting Data Execution Prevention (DEP) policy to OptIn..."
-	bcdedit /set `{current`} nx OptIn | Out-Null
-}
-
-# Enable Core Isolation Memory Integrity - Part of Windows Defender System Guard virtualization-based security - Supported from 1803
+# Enable Core Isolation Memory Integrity - Part of Windows Defender System Guard virtualization-based security - Applicable since 1803
 Function EnableCIMemoryIntegrity {
 	Write-Output "Enabling Core Isolation Memory Integrity..."
 	If (!(Test-Path "HKLM:\SYSTEM\CurrentControlSet\Control\DeviceGuard\Scenarios\HypervisorEnforcedCodeIntegrity")) {
@@ -267,10 +278,53 @@ Function EnableCIMemoryIntegrity {
 	Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\DeviceGuard\Scenarios\HypervisorEnforcedCodeIntegrity" -Name "Enabled" -Type DWord -Value 1
 }
 
-# Disable Core Isolation Memory Integrity -
+# Disable Core Isolation Memory Integrity - Applicable since 1803
 Function DisableCIMemoryIntegrity {
 	Write-Output "Disabling Core Isolation Memory Integrity..."
 	Remove-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\DeviceGuard\Scenarios\HypervisorEnforcedCodeIntegrity" -Name "Enabled" -ErrorAction SilentlyContinue
+}
+
+# Enable Windows Defender Application Guard - Applicable since 1709 Enterprise and 1803 Pro. Not applicable to Server
+# Not supported on VMs and VDI environment. Check requirements on https://docs.microsoft.com/en-us/windows/security/threat-protection/windows-defender-application-guard/reqs-wd-app-guard
+Function EnableDefenderAppGuard {
+	Write-Output "Enabling Windows Defender Application Guard..."
+	Enable-WindowsOptionalFeature -online -FeatureName "Windows-Defender-ApplicationGuard" -NoRestart -WarningAction SilentlyContinue | Out-Null
+}
+
+# Disable Windows Defender Application Guard - Applicable since 1709 Enterprise and 1803 Pro. Not applicable to Server
+Function DisableDefenderAppGuard {
+	Write-Output "Disabling Windows Defender Application Guard..."
+	Disable-WindowsOptionalFeature -online -FeatureName "Windows-Defender-ApplicationGuard" -NoRestart -WarningAction SilentlyContinue | Out-Null
+}
+
+# Hide Account Protection warning in Defender about not using a Microsoft account
+Function HideAccountProtectionWarn {
+	Write-Output "Hiding Account Protection warning..."
+	If (!(Test-Path "HKCU:\SOFTWARE\Microsoft\Windows Security Health\State")) {
+		New-Item -Path "HKCU:\SOFTWARE\Microsoft\Windows Security Health\State" -Force | Out-Null
+	}
+	Set-ItemProperty "HKCU:\SOFTWARE\Microsoft\Windows Security Health\State" -Name "AccountProtection_MicrosoftAccount_Disconnected" -Type DWord -Value 1
+}
+
+# Show Account Protection warning in Defender
+Function ShowAccountProtectionWarn {
+	Write-Output "Showing Account Protection warning..."
+	Remove-ItemProperty "HKCU:\SOFTWARE\Microsoft\Windows Security Health\State" -Name "AccountProtection_MicrosoftAccount_Disconnected" -ErrorAction SilentlyContinue
+}
+
+# Disable blocking of downloaded files (i.e. storing zone information - no need to do File\Properties\Unblock)
+Function DisableDownloadBlocking {
+	Write-Output "Disabling blocking of downloaded files..."
+	If (!(Test-Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Policies\Attachments")) {
+		New-Item -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Policies\Attachments" | Out-Null
+	}
+	Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Policies\Attachments" -Name "SaveZoneInformation" -Type DWord -Value 1
+}
+
+# Enable blocking of downloaded files
+Function EnableDownloadBlocking {
+	Write-Output "Enabling blocking of downloaded files..."
+	Remove-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Policies\Attachments" -Name "SaveZoneInformation" -ErrorAction SilentlyContinue
 }
 
 # Disable Windows Script Host (execution of *.vbs scripts and alike)
@@ -317,4 +371,56 @@ Function EnableMeltdownCompatFlag {
 Function DisableMeltdownCompatFlag {
 	Write-Output "Disabling Meltdown (CVE-2017-5754) compatibility flag..."
 	Remove-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\QualityCompat" -Name "cadca5fe-87d3-4b96-b7fb-a231484277cc" -ErrorAction SilentlyContinue
+}
+
+# Enable F8 boot menu options
+Function EnableF8BootMenu {
+	Write-Output "Enabling F8 boot menu options..."
+	bcdedit /set `{current`} BootMenuPolicy Legacy | Out-Null
+}
+
+# Disable F8 boot menu options
+Function DisableF8BootMenu {
+	Write-Output "Disabling F8 boot menu options..."
+	bcdedit /set `{current`} BootMenuPolicy Standard | Out-Null
+}
+
+# Disable automatic recovery mode during boot
+# This causes boot process to always ignore startup errors and attempt to boot normally
+# It is still possible to interrupt the boot and enter recovery mode manually. In order to disable even that, apply also DisableRecoveryAndReset tweak
+Function DisableBootRecovery {
+	Write-Output "Disabling automatic recovery mode during boot..."
+	bcdedit /set `{current`} BootStatusPolicy IgnoreAllFailures | Out-Null
+}
+
+# Enable automatic entering recovery mode during boot
+# This allows the boot process to automatically enter recovery mode when it detects startup errors (default behavior)
+Function EnableBootRecovery {
+	Write-Output "Enabling automatic recovery mode during boot..."
+	bcdedit /deletevalue `{current`} BootStatusPolicy | Out-Null
+}
+
+# Disable System Recovery and Factory reset
+# Warning: This tweak completely removes the option to enter the system recovery during boot and the possibility to perform a factory reset
+Function DisableRecoveryAndReset {
+	Write-Output "Disabling System Recovery and Factory reset..."
+	reagentc /disable 2>&1 | Out-Null
+}
+
+# Enable System Recovery and Factory reset
+Function EnableRecoveryAndReset {
+	Write-Output "Enabling System Recovery and Factory reset..."
+	reagentc /enable 2>&1 | Out-Null
+}
+
+# Set Data Execution Prevention (DEP) policy to OptOut
+Function SetDEPOptOut {
+	Write-Output "Setting Data Execution Prevention (DEP) policy to OptOut..."
+	bcdedit /set `{current`} nx OptOut | Out-Null
+}
+
+# Set Data Execution Prevention (DEP) policy to OptIn
+Function SetDEPOptIn {
+	Write-Output "Setting Data Execution Prevention (DEP) policy to OptIn..."
+	bcdedit /set `{current`} nx OptIn | Out-Null
 }

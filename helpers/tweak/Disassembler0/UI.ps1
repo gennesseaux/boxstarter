@@ -6,39 +6,42 @@
 ##########
 
 	### UI Tweaks ###
-	# "DisableActionCenter",            # "EnableActionCenter",
-	# "HideAccountProtectionWarn",      # "ShowAccountProtectionWarn",
-	# "DisableLockScreen",              # "EnableLockScreen",
-	# "DisableLockScreenRS1",           # "EnableLockScreenRS1",
-	# "HideNetworkFromLockScreen",      # "ShowNetworkOnLockScreen",
-	# "HideShutdownFromLockScreen",     # "ShowShutdownOnLockScreen",
-	# "DisableStickyKeys",              # "EnableStickyKeys",
-	# "ShowTaskManagerDetails"          # "HideTaskManagerDetails",
-	# "ShowFileOperationsDetails",      # "HideFileOperationsDetails",
-	# "EnableFileDeleteConfirm",        # "DisableFileDeleteConfirm",
-	# "HideTaskbarSearch",              # "ShowTaskbarSearchIcon",          # "ShowTaskbarSearchBox",
-	# "HideTaskView",                   # "ShowTaskView",
-	# "ShowSmallTaskbarIcons",          # "ShowLargeTaskbarIcons",
-	# "SetTaskbarCombineWhenFull",      # "SetTaskbarCombineNever",         # "SetTaskbarCombineAlways",
-	# "HideTaskbarPeopleIcon",          # "ShowTaskbarPeopleIcon",
-	# "ShowTrayIcons",                  # "HideTrayIcons",
-	# "DisableSearchAppInStore",        # "EnableSearchAppInStore",
-	# "DisableNewAppPrompt",            # "EnableNewAppPrompt",
-	# "SetControlPanelSmallIcons",      # "SetControlPanelLargeIcons",      # "SetControlPanelCategories",
-	# "SetVisualFXPerformance",         # "SetVisualFXAppearance",
-	# "AddENKeyboard",                  # "RemoveENKeyboard",
-	# "EnableNumlock",                  # "DisableNumlock",
-	# "SetSoundSchemeNone",             # "SetSoundSchemeDefault",
-	# "DisableStartupSound",            # "EnableStartupSound",
-	# "DisableChangingSoundScheme",     # "EnableChangingSoundScheme",
+	# DisableActionCenter            # EnableActionCenter
+	# DisableLockScreen              # EnableLockScreen
+	# DisableLockScreenRS1           # EnableLockScreenRS1
+	# HideNetworkFromLockScreen      # ShowNetworkOnLockScreen
+    # HideShutdownFromLockScreen     # ShowShutdownOnLockScreen
+    # DisableAeroShake               # EnableAeroShake
+	# DisableStickyKeys              # EnableStickyKeys
+	# ShowTaskManagerDetails         # HideTaskManagerDetails
+	# ShowFileOperationsDetails      # HideFileOperationsDetails
+	# EnableFileDeleteConfirm        # DisableFileDeleteConfirm
+	# HideTaskbarSearch              # ShowTaskbarSearchIcon          # ShowTaskbarSearchBox
+	# HideTaskView                   # ShowTaskView
+	# ShowSmallTaskbarIcons          # ShowLargeTaskbarIcons
+	# SetTaskbarCombineWhenFull      # SetTaskbarCombineNever         # SetTaskbarCombineAlways
+	# HideTaskbarPeopleIcon          # ShowTaskbarPeopleIcon
+	# ShowTrayIcons                  # HideTrayIcons
+	# DisableSearchAppInStore        # EnableSearchAppInStore
+    # DisableNewAppPrompt            # EnableNewAppPrompt
+    # HideRecentlyAddedApps          # ShowRecentlyAddedApps
+    # SetControlPanelSmallIcons      # SetControlPanelLargeIcons      # SetControlPanelCategories
+	# DisableShortcutInName          # EnableShortcutInName
+    # SetVisualFXPerformance         # SetVisualFXAppearance
+    # EnableDarkTheme                # DisableDarkTheme
+	# AddENKeyboard                  # RemoveENKeyboard
+	# EnableNumlock                  # DisableNumlock
+	# SetSoundSchemeNone             # SetSoundSchemeDefault
+	# DisableStartupSound            # EnableStartupSound
+	# DisableChangingSoundScheme     # EnableChangingSoundScheme
 
 ##########
 # UI Tweaks
 ##########
 
-# Disable Action Center
+# Disable Action Center (Notification Center)
 Function DisableActionCenter {
-	Write-Output "Disabling Action Center..."
+	Write-Output "Disabling Action Center (Notification Center)..."
 	If (!(Test-Path "HKCU:\SOFTWARE\Policies\Microsoft\Windows\Explorer")) {
 		New-Item -Path "HKCU:\SOFTWARE\Policies\Microsoft\Windows\Explorer" | Out-Null
 	}
@@ -46,26 +49,11 @@ Function DisableActionCenter {
 	Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\PushNotifications" -Name "ToastEnabled" -Type DWord -Value 0
 }
 
-# Enable Action Center
+# Enable Action Center (Notification Center)
 Function EnableActionCenter {
-	Write-Output "Enabling Action Center..."
+	Write-Output "Enabling Action Center (Notification Center)..."
 	Remove-ItemProperty -Path "HKCU:\SOFTWARE\Policies\Microsoft\Windows\Explorer" -Name "DisableNotificationCenter" -ErrorAction SilentlyContinue
 	Remove-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\PushNotifications" -Name "ToastEnabled" -ErrorAction SilentlyContinue
-}
-
-# Hide Account Protection warning in Defender about not using a Microsoft account
-Function HideAccountProtectionWarn {
-	Write-Output "Hiding Account Protection warning..."
-	If (!(Test-Path "HKCU:\SOFTWARE\Microsoft\Windows Security Health\State")) {
-		New-Item -Path "HKCU:\SOFTWARE\Microsoft\Windows Security Health\State" -Force | Out-Null
-	}
-	Set-ItemProperty "HKCU:\SOFTWARE\Microsoft\Windows Security Health\State" -Name "AccountProtection_MicrosoftAccount_Disconnected" -Type DWord -Value 1
-}
-
-# Show Account Protection warning in Defender
-Function ShowAccountProtectionWarn {
-	Write-Output "Showing Account Protection warning..."
-	Remove-ItemProperty "HKCU:\SOFTWARE\Microsoft\Windows Security Health\State" -Name "AccountProtection_MicrosoftAccount_Disconnected" -ErrorAction SilentlyContinue
 }
 
 # Disable Lock screen
@@ -83,7 +71,7 @@ Function EnableLockScreen {
 	Remove-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Personalization" -Name "NoLockScreen" -ErrorAction SilentlyContinue
 }
 
-# Disable Lock screen (Anniversary Update workaround) - Applicable to 1607 - 1803 (The GPO used in DisableLockScreen has been fixed again in 1803)
+# Disable Lock screen - Anniversary Update workaround. The GPO used in DisableLockScreen has been broken in 1607 and fixed again in 1803
 Function DisableLockScreenRS1 {
 	Write-Output "Disabling Lock screen using scheduler workaround..."
 	$service = New-Object -com Schedule.Service
@@ -99,7 +87,7 @@ Function DisableLockScreenRS1 {
 	$service.GetFolder("\").RegisterTaskDefinition("Disable LockScreen", $task, 6, "NT AUTHORITY\SYSTEM", $null, 4) | Out-Null
 }
 
-# Enable Lock screen (Anniversary Update workaround) - Applicable to 1607 - 1803
+# Enable Lock screen - Anniversary Update workaround. The GPO used in DisableLockScreen has been broken in 1607 and fixed again in 1803
 Function EnableLockScreenRS1 {
 	Write-Output "Enabling Lock screen (removing scheduler workaround)..."
 	Unregister-ScheduledTask -TaskName "Disable LockScreen" -Confirm:$false -ErrorAction SilentlyContinue
@@ -129,6 +117,18 @@ Function ShowShutdownOnLockScreen {
 	Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" -Name "ShutdownWithoutLogon" -Type DWord -Value 1
 }
 
+# Disable Aero Shake (minimizing other windows when one is dragged by mouse and shaken)
+Function DisableAeroShake {
+	Write-Output "Disabling Aero Shake..."
+	Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" -Name "DisallowShaking" -Type DWord -Value 1
+}
+
+# Enable Aero Shake
+Function EnableAeroShake {
+	Write-Output "Enabling Aero Shake..."
+	Remove-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" -Name "DisallowShaking" -ErrorAction SilentlyContinue
+}
+
 # Disable Sticky keys prompt
 Function DisableStickyKeys {
 	Write-Output "Disabling Sticky keys prompt..."
@@ -141,20 +141,26 @@ Function EnableStickyKeys {
 	Set-ItemProperty -Path "HKCU:\Control Panel\Accessibility\StickyKeys" -Name "Flags" -Type String -Value "510"
 }
 
-# Show Task Manager details - Applicable to 1607 and later - Although this functionality exist even in earlier versions, the Task Manager's behavior is different there and is not compatible with this tweak
+# Show Task Manager details - Applicable since 1607
+# Although this functionality exist even in earlier versions, the Task Manager's behavior is different there and is not compatible with this tweak
 Function ShowTaskManagerDetails {
 	Write-Output "Showing task manager details..."
 	$taskmgr = Start-Process -WindowStyle Hidden -FilePath taskmgr.exe -PassThru
+	$timeout = 30000
+	$sleep = 100
 	Do {
-		Start-Sleep -Milliseconds 100
+		Start-Sleep -Milliseconds $sleep
+		$timeout -= $sleep
 		$preferences = Get-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\TaskManager" -Name "Preferences" -ErrorAction SilentlyContinue
-	} Until ($preferences)
+	} Until ($preferences -or $timeout -le 0)
 	Stop-Process $taskmgr
-	$preferences.Preferences[28] = 0
-	Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\TaskManager" -Name "Preferences" -Type Binary -Value $preferences.Preferences
+	If ($preferences) {
+		$preferences.Preferences[28] = 0
+		Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\TaskManager" -Name "Preferences" -Type Binary -Value $preferences.Preferences
+	}
 }
 
-# Hide Task Manager details
+# Hide Task Manager details - Applicable since 1607
 Function HideTaskManagerDetails {
 	Write-Output "Hiding task manager details..."
 	$preferences = Get-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\TaskManager" -Name "Preferences" -ErrorAction SilentlyContinue
@@ -317,6 +323,21 @@ Function EnableNewAppPrompt {
 	Remove-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Explorer" -Name "NoNewAppAlert" -ErrorAction SilentlyContinue
 }
 
+# Hide 'Recently added' list from Start Menu
+Function HideRecentlyAddedApps {
+	Write-Output "Hiding 'Recently added' list from Start Menu..."
+	If (!(Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Explorer")) {
+		New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Explorer" | Out-Null
+	}
+	Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Explorer" -Name "HideRecentlyAddedApps" -Type DWord -Value 1
+}
+
+# Show 'Recently added' list in Start Menu
+Function ShowRecentlyAddedApps {
+	Write-Output "Showing 'Recently added' list in Start Menu..."
+	Remove-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Explorer" -Name "HideRecentlyAddedApps" -ErrorAction SilentlyContinue
+}
+
 # Set Control Panel view to Small icons (Classic)
 Function SetControlPanelSmallIcons {
 	Write-Output "Setting Control Panel view to small icons..."
@@ -342,6 +363,18 @@ Function SetControlPanelCategories {
 	Write-Output "Setting Control Panel view to categories..."
 	Remove-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\ControlPanel" -Name "StartupPage" -ErrorAction SilentlyContinue
 	Remove-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\ControlPanel" -Name "AllItemsIconView" -ErrorAction SilentlyContinue
+}
+
+# Disable adding '- shortcut' to shortcut name
+Function DisableShortcutInName {
+	Write-Output "Disabling adding '- shortcut' to shortcut name..."
+	Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer" -Name "link" -Type Binary -Value ([byte[]](0,0,0,0))
+}
+
+# Enable adding '- shortcut' to shortcut name
+Function EnableShortcutInName {
+	Write-Output "Enabling adding '- shortcut' to shortcut name..."
+	Remove-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer" -Name "link" -ErrorAction SilentlyContinue
 }
 
 # Adjusts visual effects for performance - Disables animations, transparency etc. but leaves font smoothing and miniatures enabled
@@ -374,6 +407,18 @@ Function SetVisualFXAppearance {
 	Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\DWM" -Name "EnableAeroPeek" -Type DWord -Value 1
 }
 
+# Enable Dark Theme
+Function EnableDarkTheme {
+	Write-Output "Enabling Dark Theme..."
+	Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Themes\Personalize" -Name "AppsUseLightTheme" -Type DWord -Value 0
+}
+
+# Disable Dark Theme
+Function DisableDarkTheme {
+	Write-Output "Disabling Dark Theme..."
+	Remove-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Themes\Personalize" -Name "AppsUseLightTheme" -ErrorAction SilentlyContinue
+}
+
 # Add secondary en-US keyboard
 Function AddENKeyboard {
 	Write-Output "Adding secondary en-US keyboard..."
@@ -386,7 +431,7 @@ Function AddENKeyboard {
 Function RemoveENKeyboard {
 	Write-Output "Removing secondary en-US keyboard..."
 	$langs = Get-WinUserLanguageList
-	Set-WinUserLanguageList ($langs | ? {$_.LanguageTag -ne "en-US"}) -Force
+	Set-WinUserLanguageList ($langs | Where-Object {$_.LanguageTag -ne "en-US"}) -Force
 }
 
 # Enable NumLock after startup
@@ -421,7 +466,7 @@ Function DisableNumlock {
 Function SetSoundSchemeNone {
 	Write-Output "Setting sound scheme to No Sounds..."
 	$SoundScheme = ".None"
-	Get-ChildItem -Path "HKCU:\AppEvents\Schemes\Apps\*\*" | ForEach {
+	Get-ChildItem -Path "HKCU:\AppEvents\Schemes\Apps\*\*" | ForEach-Object {
 		# If scheme keys do not exist in an event, create empty ones (similar behavior to Sound control panel).
 		If (!(Test-Path "$($_.PsPath)\$($SoundScheme)")) {
 			New-Item -Path "$($_.PsPath)\$($SoundScheme)" | Out-Null
@@ -443,7 +488,7 @@ Function SetSoundSchemeNone {
 Function SetSoundSchemeDefault {
 	Write-Output "Setting sound scheme to Windows Default..."
 	$SoundScheme = ".Default"
-	Get-ChildItem -Path "HKCU:\AppEvents\Schemes\Apps\*\*" | ForEach {
+	Get-ChildItem -Path "HKCU:\AppEvents\Schemes\Apps\*\*" | ForEach-Object {
 		# If scheme keys do not exist in an event, create empty ones (similar behavior to Sound control panel).
 		If (!(Test-Path "$($_.PsPath)\$($SoundScheme)")) {
 			New-Item -Path "$($_.PsPath)\$($SoundScheme)" | Out-Null

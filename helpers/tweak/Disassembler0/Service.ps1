@@ -6,24 +6,28 @@
 ##########
 
 	### Service Tweaks ###
-	# "DisableUpdateMSRT",              # "EnableUpdateMSRT",
-	# "DisableUpdateDriver",            # "EnableUpdateDriver",
-	# "DisableUpdateRestart",           # "EnableUpdateRestart",
-	# "DisableHomeGroups",              # "EnableHomeGroups",
-	# "DisableSharedExperiences",       # "EnableSharedExperiences",
-	# "DisableRemoteAssistance",        # "EnableRemoteAssistance",
-	# "EnableRemoteDesktop",            # "DisableRemoteDesktop",
-	# "DisableAutoplay",                # "EnableAutoplay",
-	# "DisableAutorun",                 # "EnableAutorun",
-	# "EnableStorageSense",             # "DisableStorageSense",
-	# "DisableDefragmentation",         # "EnableDefragmentation",
-	# "DisableSuperfetch",              # "EnableSuperfetch",
-	# "DisableIndexing",                # "EnableIndexing",
-	# "SetBIOSTimeUTC",                 # "SetBIOSTimeLocal",
-	# "EnableHibernation",              # "DisableHibernation",
-	# "DisableSleepButton",             # "EnableSleepButton",
-	# "DisableSleepTimeout",            # "EnableSleepTimeout",
-    # "DisableFastStartup",             # "EnableFastStartup",
+	# DisableUpdateMSRT              # EnableUpdateMSRT
+	# DisableUpdateDriver            # EnableUpdateDriver
+	# DisableUpdateRestart           # EnableUpdateRestart
+	# DisableHomeGroups              # EnableHomeGroups
+	# DisableSharedExperiences       # EnableSharedExperiences
+	# DisableRemoteAssistance        # EnableRemoteAssistance
+	# EnableRemoteDesktop            # DisableRemoteDesktop
+	# DisableAutoplay                # EnableAutoplay
+    # DisableAutorun                 # EnableAutorun
+    # DisableRestorePoints           # EnableRestorePoints
+	# EnableStorageSense             # DisableStorageSense
+	# DisableDefragmentation         # EnableDefragmentation
+	# DisableSuperfetch              # EnableSuperfetch
+    # DisableIndexing                # EnableIndexing
+    # DisableNTFSLastAccess          # EnableNTFSLastAccess
+	# SetBIOSTimeUTC                 # SetBIOSTimeLocal
+	# EnableHibernation              # DisableHibernation
+	# DisableSleepButton             # EnableSleepButton
+	# DisableSleepTimeout            # EnableSleepTimeout
+    # DisableFastStartup             # EnableFastStartup
+    # DisableAutoRebootOnCrash       # EnableAutoRebootOnCrash
+
 
 ##########
 # Service Tweaks
@@ -93,16 +97,20 @@ Function EnableUpdateRestart {
 	Remove-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" -Name "AUPowerManagement" -ErrorAction SilentlyContinue
 }
 
-# Stop and disable Home Groups services - Not applicable to 1803 and newer or Server
+# Stop and disable Home Groups services - Not applicable since 1803. Not applicable to Server
 Function DisableHomeGroups {
 	Write-Output "Stopping and disabling Home Groups services..."
-	Stop-Service "HomeGroupListener" -WarningAction SilentlyContinue
-	Set-Service "HomeGroupListener" -StartupType Disabled
-	Stop-Service "HomeGroupProvider" -WarningAction SilentlyContinue
-	Set-Service "HomeGroupProvider" -StartupType Disabled
+	If (Get-Service "HomeGroupListener" -ErrorAction SilentlyContinue) {
+		Stop-Service "HomeGroupListener" -WarningAction SilentlyContinue
+		Set-Service "HomeGroupListener" -StartupType Disabled
+	}
+	If (Get-Service "HomeGroupProvider" -ErrorAction SilentlyContinue) {
+		Stop-Service "HomeGroupProvider" -WarningAction SilentlyContinue
+		Set-Service "HomeGroupProvider" -StartupType Disabled
+	}
 }
 
-# Enable and start Home Groups services - Not applicable to 1803 and newer or Server
+# Enable and start Home Groups services - Not applicable since 1803. Not applicable to Server
 Function EnableHomeGroups {
 	Write-Output "Starting and enabling Home Groups services..."
 	Set-Service "HomeGroupListener" -StartupType Manual
@@ -110,18 +118,20 @@ Function EnableHomeGroups {
 	Start-Service "HomeGroupProvider" -WarningAction SilentlyContinue
 }
 
-# Disable Shared Experiences - Not applicable to Server
+# Disable Shared Experiences - Applicable since 1703. Not applicable to Server
+# This setting can be set also via GPO, however doing so causes reset of Start Menu cache. See https://github.com/Disassembler0/Win10-Initial-Setup-Script/issues/145 for details
 Function DisableSharedExperiences {
 	Write-Output "Disabling Shared Experiences..."
-	Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\System" -Name "EnableCdp" -Type DWord -Value 0
-	Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\System" -Name "EnableMmx" -Type DWord -Value 0
+	If (!(Test-Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\CDP")) {
+		New-Item -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\CDP" | Out-Null
+	}
+	Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\CDP" -Name "RomeSdkChannelUserAuthzPolicy" -Type DWord -Value 0
 }
 
-# Enable Shared Experiences - Not applicable to Server
+# Enable Shared Experiences - Applicable since 1703. Not applicable to Server
 Function EnableSharedExperiences {
 	Write-Output "Enabling Shared Experiences..."
-	Remove-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\System" -Name "EnableCdp" -ErrorAction SilentlyContinue
-	Remove-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\System" -Name "EnableMmx" -ErrorAction SilentlyContinue
+	Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\CDP" -Name "RomeSdkChannelUserAuthzPolicy" -Type DWord -Value 1
 }
 
 # Disable Remote Assistance - Not applicable to Server (unless Remote Assistance is explicitly installed)
@@ -179,20 +189,33 @@ Function EnableAutorun {
 	Remove-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer" -Name "NoDriveTypeAutoRun" -ErrorAction SilentlyContinue
 }
 
-# Enable Storage Sense - automatic disk cleanup - Not applicable to Server
+# Disable System Restore for system drive - Not applicable to Server
+# Note: This does not delete already existing restore points as the deletion of restore points is irreversible. In order to do that, run also following command.
+# vssadmin Delete Shadows /For=$env:SYSTEMDRIVE /Quiet
+Function DisableRestorePoints {
+	Write-Output "Disabling System Restore for system drive..."
+	Disable-ComputerRestore -Drive "$env:SYSTEMDRIVE"
+}
+
+# Enable System Restore for system drive - Not applicable to Server
+# Note: Some systems (notably VMs) have maximum size allowed to be used for shadow copies set to zero. In order to increase the size, run following command.
+# vssadmin Resize ShadowStorage /On=$env:SYSTEMDRIVE /For=$env:SYSTEMDRIVE /MaxSize=10GB
+Function EnableRestorePoints {
+	Write-Output "Enabling System Restore for system drive..."
+	Enable-ComputerRestore -Drive "$env:SYSTEMDRIVE"
+}
+
+# Enable Storage Sense - automatic disk cleanup - Applicable since 1703
 Function EnableStorageSense {
 	Write-Output "Enabling Storage Sense..."
 	If (!(Test-Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\StorageSense\Parameters\StoragePolicy")) {
 		New-Item -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\StorageSense\Parameters\StoragePolicy" -Force | Out-Null
 	}
 	Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\StorageSense\Parameters\StoragePolicy" -Name "01" -Type DWord -Value 1
-	Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\StorageSense\Parameters\StoragePolicy" -Name "04" -Type DWord -Value 1
-	Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\StorageSense\Parameters\StoragePolicy" -Name "08" -Type DWord -Value 1
-	Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\StorageSense\Parameters\StoragePolicy" -Name "32" -Type DWord -Value 0
 	Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\StorageSense\Parameters\StoragePolicy" -Name "StoragePoliciesNotified" -Type DWord -Value 1
 }
 
-# Disable Storage Sense - Not applicable to Server
+# Disable Storage Sense - Applicable since 1703
 Function DisableStorageSense {
 	Write-Output "Disabling Storage Sense..."
 	Remove-Item -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\StorageSense\Parameters\StoragePolicy" -Recurse -ErrorAction SilentlyContinue
@@ -210,14 +233,14 @@ Function EnableDefragmentation {
 	Enable-ScheduledTask -TaskName "Microsoft\Windows\Defrag\ScheduledDefrag" | Out-Null
 }
 
-# Stop and disable Superfetch service - Not applicable to Server
+# Stop and disable Superfetch service
 Function DisableSuperfetch {
 	Write-Output "Stopping and disabling Superfetch service..."
 	Stop-Service "SysMain" -WarningAction SilentlyContinue
 	Set-Service "SysMain" -StartupType Disabled
 }
 
-# Start and enable Superfetch service - Not applicable to Server
+# Start and enable Superfetch service
 Function EnableSuperfetch {
 	Write-Output "Starting and enabling Superfetch service..."
 	Set-Service "SysMain" -StartupType Automatic
@@ -237,6 +260,25 @@ Function EnableIndexing {
 	Set-Service "WSearch" -StartupType Automatic
 	Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\WSearch" -Name "DelayedAutoStart" -Type DWord -Value 1
 	Start-Service "WSearch" -WarningAction SilentlyContinue
+}
+
+# Disable the updating of the NTFS Last Access Time stamps
+Function DisableNTFSLastAccess {
+	Write-Output "Disabling the updating of the Last Access Time stamps..."
+	# User Managed, Last Access Updates Disabled
+	fsutil behavior set DisableLastAccess 1 | Out-Null
+}
+
+# Enable the updating of the NTFS Last Access Time stamps
+Function EnableNTFSLastAccess {
+	Write-Output "Enabling the updating of the Last Access Time stamps..."
+	If ([System.Environment]::OSVersion.Version.Build -ge 17134) {
+		# System Managed, Last Access Updates Enabled
+		fsutil behavior set DisableLastAccess 2 | Out-Null
+	} Else {
+		# Last Access Updates Enabled
+		fsutil behavior set DisableLastAccess 0 | Out-Null
+	}
 }
 
 # Set BIOS time to UTC
@@ -259,6 +301,7 @@ Function EnableHibernation {
 		New-Item -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\FlyoutMenuSettings" | Out-Null
 	}
 	Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\FlyoutMenuSettings" -Name "ShowHibernateOption" -Type Dword -Value 1
+	powercfg /HIBERNATE ON 2>&1 | Out-Null
 }
 
 # Disable Hibernation
@@ -269,6 +312,7 @@ Function DisableHibernation {
 		New-Item -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\FlyoutMenuSettings" | Out-Null
 	}
 	Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\FlyoutMenuSettings" -Name "ShowHibernateOption" -Type Dword -Value 0
+	powercfg /HIBERNATE OFF 2>&1 | Out-Null
 }
 
 # Disable Sleep start menu and keyboard button
@@ -321,4 +365,16 @@ Function DisableFastStartup {
 Function EnableFastStartup {
 	Write-Output "Enabling Fast Startup..."
 	Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Power" -Name "HiberbootEnabled" -Type DWord -Value 1
+}
+
+# Disable automatic reboot on crash (BSOD)
+Function DisableAutoRebootOnCrash {
+	Write-Output "Disabling automatic reboot on crash (BSOD)..."
+	Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\CrashControl" -Name "AutoReboot" -Type DWord -Value 0
+}
+
+# Enable automatic reboot on crash (BSOD)
+Function EnableAutoRebootOnCrash {
+	Write-Output "Enabling automatic reboot on crash (BSOD)..."
+	Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\CrashControl" -Name "AutoReboot" -Type DWord -Value 1
 }

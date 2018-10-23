@@ -6,24 +6,25 @@
 ##########
 
     ### Privacy Tweaks ###
-	# "DisableTelemetry",               # "EnableTelemetry",
-	# "DisableWiFiSense",               # "EnableWiFiSense",
-	# "DisableSmartScreen",             # "EnableSmartScreen",
-	# "DisableWebSearch",               # "EnableWebSearch",
-	# "DisableAppSuggestions",          # "EnableAppSuggestions",
-	# "DisableActivityHistory",         # "EnableActivityHistory",
-	# "DisableBackgroundApps",          # "EnableBackgroundApps",
-	# "DisableLocationTracking",        # "EnableLocationTracking",
-	# "DisableMapUpdates",              # "EnableMapUpdates",
-	# "DisableFeedback",                # "EnableFeedback",
-	# "DisableTailoredExperiences",     # "EnableTailoredExperiences",
-	# "DisableAdvertisingID",           # "EnableAdvertisingID",
-	# "DisableWebLangList",             # "EnableWebLangList",
-	# "DisableCortana",                 # "EnableCortana",
-	# "DisableErrorReporting",          # "EnableErrorReporting",
-	# "SetP2PUpdateLocal",              # "SetP2PUpdateInternet",           # "SetP2PUpdateDisable",
-	# "DisableDiagTrack",               # "EnableDiagTrack",
-	# "DisableWAPPush",                 # "EnableWAPPush",
+	# DisableTelemetry               # EnableTelemetry
+	# DisableWiFiSense               # EnableWiFiSense
+	# DisableSmartScreen             # EnableSmartScreen
+	# DisableWebSearch               # EnableWebSearch
+	# DisableAppSuggestions          # EnableAppSuggestions
+	# DisableActivityHistory         # EnableActivityHistory
+	# DisableBackgroundApps          # EnableBackgroundApps
+	# DisableLocationTracking        # EnableLocationTracking
+	# DisableMapUpdates              # EnableMapUpdates
+	# DisableFeedback                # EnableFeedback
+	# DisableTailoredExperiences     # EnableTailoredExperiences
+	# DisableAdvertisingID           # EnableAdvertisingID
+	# DisableWebLangList             # EnableWebLangList
+	# DisableCortana                 # EnableCortana
+	# DisableErrorReporting          # EnableErrorReporting
+	# SetP2PUpdateLocal              # SetP2PUpdateInternet           # SetP2PUpdateDisable
+	# DisableDiagTrack               # EnableDiagTrack
+    # DisableWAPPush                 # EnableWAPPush
+    # HideRecentJumplists            # ShowRecentJumplists
 
 ##########
 # Privacy Tweaks
@@ -148,12 +149,19 @@ Function DisableAppSuggestions {
 	Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" -Name "SubscribedContent-338388Enabled" -Type DWord -Value 0
 	Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" -Name "SubscribedContent-338389Enabled" -Type DWord -Value 0
 	Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" -Name "SubscribedContent-338393Enabled" -Type DWord -Value 0
+	Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" -Name "SubscribedContent-353696Enabled" -Type DWord -Value 0
 	Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" -Name "SubscribedContent-353698Enabled" -Type DWord -Value 0
 	Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" -Name "SystemPaneSuggestionsEnabled" -Type DWord -Value 0
 	If (!(Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\CloudContent")) {
 		New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\CloudContent" -Force | Out-Null
 	}
 	Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\CloudContent" -Name "DisableWindowsConsumerFeatures" -Type DWord -Value 1
+	# Empty placeholder tile collection in registry cache and restart Start Menu process to reload the cache
+	If ([System.Environment]::OSVersion.Version.Build -ge 17134) {
+		$key = Get-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\CloudStore\Store\Cache\DefaultAccount\*windows.data.placeholdertilecollection\Current"
+		Set-ItemProperty -Path $key.PSPath -Name "Data" -Type Binary -Value $key.Data[0..15]
+		Stop-Process -Name "ShellExperienceHost" -Force -ErrorAction SilentlyContinue
+	}
 }
 
 # Enable Application suggestions and automatic installation
@@ -166,6 +174,7 @@ Function EnableAppSuggestions {
 	Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" -Name "SilentInstalledAppsEnabled" -Type DWord -Value 1
 	Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" -Name "SubscribedContent-338388Enabled" -Type DWord -Value 1
 	Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" -Name "SubscribedContent-338389Enabled" -Type DWord -Value 1
+	Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" -Name "SubscribedContent-353696Enabled" -Type DWord -Value 1
 	Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" -Name "SystemPaneSuggestionsEnabled" -Type DWord -Value 1
 	Remove-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" -Name "SubscribedContent-310093Enabled" -ErrorAction SilentlyContinue
 	Remove-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" -Name "SubscribedContent-338387Enabled" -ErrorAction SilentlyContinue
@@ -180,6 +189,8 @@ Function DisableActivityHistory {
 	Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\System" -Name "EnableActivityFeed" -Type DWord -Value 0
 	Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\System" -Name "PublishUserActivities" -Type DWord -Value 0
 	Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\System" -Name "UploadUserActivities" -Type DWord -Value 0
+	Stop-Service "CDPUserSvc" -WarningAction SilentlyContinue
+	Set-Service "CDPUserSvc" -StartupType Disabled
 }
 
 # Enable Activity History feed in Task View
@@ -188,12 +199,14 @@ Function EnableActivityHistory {
 	Remove-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\System" -Name "EnableActivityFeed" -ErrorAction SilentlyContinue
 	Remove-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\System" -Name "PublishUserActivities" -ErrorAction SilentlyContinue
 	Remove-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\System" -Name "UploadUserActivities" -ErrorAction SilentlyContinue
+	Set-Service "CDPUserSvc" -StartupType Automatic
+	# CDPUserSvc is a parent for user services and cannot be started directly. The user services will be started after reboot.
 }
 
 # Disable Background application access - ie. if apps can download or update when they aren't used - Cortana is excluded as its inclusion breaks start menu search
 Function DisableBackgroundApps {
 	Write-Output "Disabling Background application access..."
-	Get-ChildItem -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\BackgroundAccessApplications" -Exclude "Microsoft.Windows.Cortana*" | ForEach {
+	Get-ChildItem -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\BackgroundAccessApplications" -Exclude "Microsoft.Windows.Cortana*" | ForEach-Object {
 		Set-ItemProperty -Path $_.PsPath -Name "Disabled" -Type DWord -Value 1
 		Set-ItemProperty -Path $_.PsPath -Name "DisabledByUser" -Type DWord -Value 1
 	}
@@ -202,7 +215,7 @@ Function DisableBackgroundApps {
 # Enable Background application access
 Function EnableBackgroundApps {
 	Write-Output "Enabling Background application access..."
-	Get-ChildItem -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\BackgroundAccessApplications" | ForEach {
+	Get-ChildItem -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\BackgroundAccessApplications" | ForEach-Object {
 		Remove-ItemProperty -Path $_.PsPath -Name "Disabled" -ErrorAction SilentlyContinue
 		Remove-ItemProperty -Path $_.PsPath -Name "DisabledByUser" -ErrorAction SilentlyContinue
 	}
@@ -357,54 +370,60 @@ Function EnableErrorReporting {
 # Restrict Windows Update P2P delivery optimization to computers in local network - Default since 1703
 Function SetP2PUpdateLocal {
 	Write-Output "Restricting Windows Update P2P optimization to local network..."
-	If ([System.Environment]::OSVersion.Version.Build -lt 16299) {
-		# Method used in 1507 - 1703
+	If ([System.Environment]::OSVersion.Version.Build -eq 10240) {
+		# Method used in 1507
 		If (!(Test-Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\DeliveryOptimization\Config")) {
 			New-Item -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\DeliveryOptimization\Config" | Out-Null
 		}
 		Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\DeliveryOptimization\Config" -Name "DODownloadMode" -Type DWord -Value 1
-	} Else {
-		# Method used since 1709
-		If (!(Test-Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\DeliveryOptimization\Settings")) {
-			New-Item -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\DeliveryOptimization\Settings" | Out-Null
+	} ElseIf ([System.Environment]::OSVersion.Version.Build -le 14393) {
+		# Method used in 1511 and 1607
+		If (!(Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\DeliveryOptimization")) {
+			New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\DeliveryOptimization" | Out-Null
 		}
-		Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\DeliveryOptimization\Settings" -Name "DownloadMode" -Type DWord -Value 1
+		Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\DeliveryOptimization" -Name "DODownloadMode" -Type DWord -Value 1
+	} Else {
+		# Method used since 1703
+		Remove-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\DeliveryOptimization" -Name "DODownloadMode" -ErrorAction SilentlyContinue
 	}
 }
 
 # Unrestrict Windows Update P2P delivery optimization to both local networks and internet - Default in 1507 - 1607
 Function SetP2PUpdateInternet {
 	Write-Output "Unrestricting Windows Update P2P optimization to internet..."
-	If ([System.Environment]::OSVersion.Version.Build -lt 16299) {
-		# Method used in 1507 - 1703
+	If ([System.Environment]::OSVersion.Version.Build -eq 10240) {
+		# Method used in 1507
 		If (!(Test-Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\DeliveryOptimization\Config")) {
 			New-Item -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\DeliveryOptimization\Config" | Out-Null
 		}
 		Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\DeliveryOptimization\Config" -Name "DODownloadMode" -Type DWord -Value 3
+	} ElseIf ([System.Environment]::OSVersion.Version.Build -eq 14393) {
+		# Method used in 1511 and 1607
+		Remove-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\DeliveryOptimization" -Name "DODownloadMode" -ErrorAction SilentlyContinue
 	} Else {
-		# Method used since 1709
-		If (!(Test-Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\DeliveryOptimization\Settings")) {
-			New-Item -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\DeliveryOptimization\Settings" | Out-Null
+		# Method used since 1703
+		If (!(Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\DeliveryOptimization")) {
+			New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\DeliveryOptimization" | Out-Null
 		}
-		Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\DeliveryOptimization\Settings" -Name "DownloadMode" -Type DWord -Value 3
+		Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\DeliveryOptimization" -Name "DODownloadMode" -Type DWord -Value 3
 	}
 }
 
 # Disable Windows Update P2P delivery optimization completely
 Function SetP2PUpdateDisable {
 	Write-Output "Disabling Windows Update P2P optimization..."
-	If ([System.Environment]::OSVersion.Version.Build -lt 16299) {
-		# Method used in 1507 - 1703
+	If ([System.Environment]::OSVersion.Version.Build -eq 10240) {
+		# Method used in 1507
 		If (!(Test-Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\DeliveryOptimization\Config")) {
 			New-Item -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\DeliveryOptimization\Config" | Out-Null
 		}
 		Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\DeliveryOptimization\Config" -Name "DODownloadMode" -Type DWord -Value 0
 	} Else {
-		# Method used since 1709
-		If (!(Test-Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\DeliveryOptimization\Settings")) {
-			New-Item -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\DeliveryOptimization\Settings" | Out-Null
+		# Method used since 1511
+		If (!(Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\DeliveryOptimization")) {
+			New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\DeliveryOptimization" | Out-Null
 		}
-		Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\DeliveryOptimization\Settings" -Name "DownloadMode" -Type DWord -Value 0
+		Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\DeliveryOptimization" -Name "DODownloadMode" -Type DWord -Value 100
 	}
 }
 
@@ -435,4 +454,16 @@ Function EnableWAPPush {
 	Set-Service "dmwappushservice" -StartupType Automatic
 	Start-Service "dmwappushservice" -WarningAction SilentlyContinue
 	Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\dmwappushservice" -Name "DelayedAutoStart" -Type DWord -Value 1
+}
+
+# Hide recently opened items in Jump Lists on Start or the taskbar
+Function HideRecentJumplists {
+	Write-Output "Hiding recently opened items in Jump Lists..."
+	Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" -Name "Start_TrackDocs" -Type DWord -Value 0
+}
+
+# Show recently opened items in Jump Lists on Start or the taskbar
+Function ShowRecentJumplists {
+	Write-Output "Showing recently opened items in Jump Lists..."
+	Remove-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" -Name "Start_TrackDocs" -ErrorAction SilentlyContinue
 }
