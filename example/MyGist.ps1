@@ -4,9 +4,6 @@
 # Clear output console
 Clear-Host
 
-# Clean the powershell session
-Get-PSSession | Remove-PSSession
-
 # Change the current process policy to Unrestricted
 Set-ExecutionPolicy Unrestricted -Scope Process -Force
 

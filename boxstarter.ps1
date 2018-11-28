@@ -9,7 +9,10 @@ Param (
     [String[]]$Options=$null,
 
     # Add your personnal boxstarter scripts
-    [String[]]$Scripts=$null
+    [String[]]$Scripts=$null,
+
+    # WebClient to be used (Usefull when behind a proxy)
+    [System.Net.WebClient]$WebClient=$null
 )
 
 #--- [Declarations] ---------------------------------------------------------------------------------------------------
@@ -28,12 +31,12 @@ Function Import-File {
     Dote source a local file or a web file.
     .PARAMETER Path
     Parth to the file. The path can point to a local file or web file.
-    .PARAMETER Credential
+    .PARAMETER WebClient
     Used to acces the web file when behind a proxy.
     #>
     param(
         [String]$Path,
-        [PSCredential]$Credential
+        [System.Net.WebClient]$WebClient=$null
     )
 
     # Check if path is an url
@@ -43,15 +46,9 @@ Function Import-File {
     # Get the script content from the web
     if($isUrl -eq $true) {
         # Create the Web Client object
-        $webclient = New-Object System.Net.WebClient
-
-        # Tell it to use our default creds for the proxy
-        if($Credential -eq $null) {
+        if($null -eq $webclient) {
+            $webclient = New-Object System.Net.WebClient
             $webclient.Proxy.Credentials = [System.Net.CredentialCache]::DefaultNetworkCredentials
-        }
-        # Tell it to use the provided credential
-        else {
-            $webclient.Proxy.Credentials = $Credential
         }
 
         # Define the TLS versions to use
@@ -74,15 +71,15 @@ Function Import-Function {
     Dote source a local file or a web file.
     .PARAMETER Path
     Parth to the file. The path can point to a local file or web file.
-    .PARAMETER Credential
+    .PARAMETER WebClient
     Used to acces the web file when behind a proxy.
     #>
     param(
         [String]$Path,
-        [PSCredential]$Credential
+        [System.Net.WebClient]$WebClient=$null
 	  )
 
-    $script = Import-File -Path $Path -Credential $Credential
+    $script = Import-File -Path $Path -WebClient $webclient
 
     # Dot source the functions as global function
     if([String]::IsNullOrEmpty($script) -eq $false) {
@@ -94,8 +91,8 @@ Function Import-Function {
 
 
 #--- [Import] ---------------------------------------------------------------------------------------------------------
-Import-Function -Path "$sRoot/helpers/function/EnvironmentVariable.ps1"
-Import-Function -Path "$sRoot/helpers/function/Options.ps1"
+Import-Function -WebClient $webclient -Path "$sRoot/helpers/function/EnvironmentVariable.ps1"
+Import-Function -WebClient $webclient -Path "$sRoot/helpers/function/Options.ps1"
 #----------------------------------------------------------------------------------------------------------------------
 
 
@@ -111,18 +108,18 @@ Import-Function -Path "$sRoot/helpers/function/Options.ps1"
 
   # Install scripts to use with boxstarter
   $installScript = @()
-  $installScript += Import-File -Path "$sRoot/helpers/profile/Import.ps1"
+  $installScript += Import-File -WebClient $webclient -Path "$sRoot/helpers/profile/Import.ps1"
 
   # Add profiles to install scripts
   if(!($null -eq $Profiles)) {
-    $installScript += Import-File -Path "$sRoot/helpers/profile/Begin.ps1"
-    $installScript += ($Profiles | ForEach-Object {Import-File -Path "$sRoot/profile/$_.ps1"})
-    $installScript += Import-File -Path "$sRoot/helpers/profile/End.ps1"
+    $installScript += Import-File -WebClient $webclient -Path "$sRoot/helpers/profile/Begin.ps1"
+    $installScript += ($Profiles | ForEach-Object {Import-File -WebClient $webclient -Path "$sRoot/profile/$_.ps1"})
+    $installScript += Import-File -WebClient $webclient -Path "$sRoot/helpers/profile/End.ps1"
   }
 
   # Add personnal boxstarter scripts
   if(!($null -eq $Scripts)) {
-    $installScript += ($Scripts | ForEach-Object {Import-File -Path "$_"})
+    $installScript += ($Scripts | ForEach-Object {Import-File -WebClient $webclient -Path "$_"})
   }
 
   # Rename #SCRIPT_PATH#
@@ -135,7 +132,12 @@ Import-Function -Path "$sRoot/helpers/function/Options.ps1"
   $userCredential = Get-Credential -UserName $env:username -Message "Enter the login that will be used on reboot"
 
   # Launch boxstarter
-  . { Invoke-WebRequest -useb http://boxstarter.org/bootstrapper.ps1 } | Invoke-Expression; get-boxstarter -Force
+  if($null -eq $webclient) {
+    . { Invoke-WebRequest -useb http://boxstarter.org/bootstrapper.ps1 } | Invoke-Expression; get-boxstarter -Force
+  }
+  else {
+    . { $webclient.DownloadString('http://boxstarter.org/bootstrapper.ps1') } | Invoke-Expression; get-boxstarter -Force
+  }
   Install-BoxstarterPackage "$($env:temp)\boxstarter_script.txt" -Credential $userCredential
 
-  #----------------------------------------------------------------------------------------------------------------------
+#----------------------------------------------------------------------------------------------------------------------

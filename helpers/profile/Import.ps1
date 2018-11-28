@@ -8,12 +8,12 @@ Function Import-Function {
     Dote source a local file or a web file.
     .PARAMETER Path
     Parth to the file. The path can point to a local file or web file.
-    .PARAMETER Credential
+    .PARAMETER WebClient
     Used to acces the web file when behind a proxy.
     #>
     param(
         [String]$Path,
-        [PSCredential]$Credential
+        [System.Net.WebClient]$WebClient=$null
 	  )
 
     # Check if path is an url
@@ -23,15 +23,9 @@ Function Import-Function {
     # Get the script content from the web
     if($isUrl -eq $true) {
         # Create the Web Client object
-        $webclient = New-Object System.Net.WebClient
-
-        # Tell it to use our default creds for the proxy
-        if($Credential -eq $null) {
+        if($null -eq $webclient) {
+            $webclient = New-Object System.Net.WebClient
             $webclient.Proxy.Credentials = [System.Net.CredentialCache]::DefaultNetworkCredentials
-        }
-        # Tell it to use the provided credential
-        else {
-            $webclient.Proxy.Credentials = $Credential
         }
 
         # Define the TLS versions to use
@@ -54,9 +48,9 @@ Function Import-Function {
 }
 
 # Defautl import
-Import-Function -Path "$sRoot/helpers/function/Chocolatey.ps1"
-Import-Function -Path "$sRoot/helpers/function/EnvironmentVariable.ps1"
-Import-Function -Path "$sRoot/helpers/function/Options.ps1"
-Import-Function -Path "$sRoot/helpers/function/OsInformation.ps1"
-Import-Function -Path "$sRoot/helpers/function/Registry.ps1"
-Import-Function -Path "$sRoot/helpers/function/Pin-TaskBarItem.ps1"
+Import-Function -WebClient $webclient -Path "$sRoot/helpers/function/Chocolatey.ps1"
+Import-Function -WebClient $webclient -Path "$sRoot/helpers/function/EnvironmentVariable.ps1"
+Import-Function -WebClient $webclient -Path "$sRoot/helpers/function/Options.ps1"
+Import-Function -WebClient $webclient -Path "$sRoot/helpers/function/OsInformation.ps1"
+Import-Function -WebClient $webclient -Path "$sRoot/helpers/function/Registry.ps1"
+Import-Function -WebClient $webclient -Path "$sRoot/helpers/function/Pin-TaskBarItem.ps1"

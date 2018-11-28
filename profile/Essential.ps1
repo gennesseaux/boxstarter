@@ -489,3 +489,4 @@ if(Get-OptionBool 'Boxstarter::Essential::Remove-Apps') {
             Start-Process "C:\Program Files\McAfee\MSC\mcuihost.exe" -arg "$mcafee" -Wait
         }
     }
+}
