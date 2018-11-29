@@ -11,6 +11,9 @@ Param (
     # Add your personnal boxstarter scripts
     [String[]]$Scripts=$null,
 
+    # Add chocolatey packages to install
+    [String[]]$Packages=$null,
+
     # WebClient to be used (Usefull when behind a proxy)
     [System.Net.WebClient]$WebClient=$null
 )
@@ -120,6 +123,11 @@ Import-Function -WebClient $webclient -Path "$sRoot/helpers/function/Options.ps1
   # Add personnal boxstarter scripts
   if(!($null -eq $Scripts)) {
     $installScript += ($Scripts | ForEach-Object {Import-File -WebClient $webclient -Path "$_"})
+  }
+
+  # Add chocolatey packages
+  if(!($null -eq $Packages)) {
+    $installScript += ($Scripts | ForEach-Object {"Install-ChocoApp $_"})
   }
 
   # Rename #SCRIPT_PATH#

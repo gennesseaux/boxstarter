@@ -60,11 +60,19 @@ $options = @(
     'Boxstarter::DevCore::VisualStudioCodeExtensions::Extensions=ms-vscode.PowerShell,bibhasdn.git-easy'
 )
 
+# User scripts
+$scripts = @(
+)
+
+# Packages
+$packages = @(
+)
+
 # Download my boxstarter bootstrap
 $webClient.DownloadFile('https://raw.githubusercontent.com/AbsCoDes/boxstarter/master/boxstarter.ps1', "$($env:temp)\boxstarter.ps1")
 
 # Start the setup process
 &Invoke-Command -ScriptBlock {
-    &"$($env:temp)\boxstarter.ps1" -profiles $profiles -options $options -webClient $webClient
+    &"$($env:temp)\boxstarter.ps1" -profiles $profiles -options $options -scripts $scripts -packages $packages -webClient $webClient
 }
 

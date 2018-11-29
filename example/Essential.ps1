@@ -37,10 +37,18 @@ $options = @(
     'Boxstarter::Essential::Remove-Apps=true'
 )
 
+# User scripts
+$scripts = @(
+)
+
+# Packages
+$packages = @(
+)
+
 # Download my boxstarter bootstrap
 Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/AbsCoDes/boxstarter/master/boxstarter.ps1' -OutFile "$($env:temp)\boxstarter.ps1"
 
 # Start the setup process
 &Invoke-Command -ScriptBlock {
-    &"$($env:temp)\boxstarter.ps1" -profiles $profiles -options $options
+    &"$($env:temp)\boxstarter.ps1" -profiles $profiles -options $options -scripts $scripts -packages $packages
 }
