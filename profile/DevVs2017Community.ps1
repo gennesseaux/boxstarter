@@ -1,5 +1,5 @@
 #--- [Import] ---------------------------------------------------------------------------------------------------------
-Import-Function -Path "$sRoot/helpers/install/Install-Install-VisualStudio2017.ps1"
+Import-Function -Path "$sRoot/helpers/install/Install-VisualStudio2017.ps1"
 Import-Function -Path "$sRoot/helpers/install/Install-VisualStudio2017VsixPackage.ps1"
 #----------------------------------------------------------------------------------------------------------------------
 
