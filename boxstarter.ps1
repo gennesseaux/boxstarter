@@ -127,7 +127,7 @@ Import-Function -WebClient $webclient -Path "$sRoot/helpers/function/Options.ps1
 
   # Add chocolatey packages
   if(!($null -eq $Packages)) {
-    $installScript += ($Scripts | ForEach-Object {"Install-ChocoApp $_"})
+    $installScript += ($Packages | ForEach-Object {"Install-ChocoApp $_"})
   }
 
   # Rename #SCRIPT_PATH#
