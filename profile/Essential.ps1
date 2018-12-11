@@ -85,7 +85,7 @@ if(Confirm-Install 'Boxstarter::Essential::Security')
     # EnableDefenderAppGuard        # DisableDefenderAppGuard
     HideAccountProtectionWarn       # ShowAccountProtectionWarn
     # DisableDownloadBlocking       # EnableDownloadBlocking
-    DisableScriptHost               # EnableScriptHost
+    # DisableScriptHost             # EnableScriptHost
     EnableDotNetStrongCrypto        # DisableDotNetStrongCrypto
     # EnableMeltdownCompatFlag      # DisableMeltdownCompatFlag
     EnableF8BootMenu                # DisableF8BootMenu
@@ -134,7 +134,7 @@ if(Confirm-Install 'Boxstarter::Essential::UI')
     Write-BoxstarterMessage "Updating UI settings..."
 
     # DisableActionCenter           # EnableActionCenter
-    DisableLockScreen               # EnableLockScreen
+    # DisableLockScreen             # EnableLockScreen
     # DisableLockScreenRS1          # EnableLockScreenRS1
     # HideNetworkFromLockScreen     # ShowNetworkOnLockScreen
     # HideShutdownFromLockScreen    # ShowShutdownOnLockScreen
