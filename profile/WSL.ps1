@@ -11,16 +11,20 @@
 #  Much of the configuration is taken from Simon Holywell, Windows-Boxstarter-with-WSL-Ubuntu repository :
 #  https://github.com/treffynnon/Windows-Boxstarter-with-WSL-Ubuntu
 
+#--- [Import] ---------------------------------------------------------------------------------------------------------
+Import-Function -WebClient $webclient -Path "$sRoot/helpers/function/OsInformation.ps1"
+#----------------------------------------------------------------------------------------------------------------------
+
 if(Confirm-Install 'Boxstarter::WSL') {
 
     # Windows 10 is required
-    if(!Get-IsOSWindows10) {
+    if(! (Get-IsOSWindows10)) {
         Write-Error 'Upgrade to Windows 10 before running this script'
         return
     }
 
     # Windows 10 - 1803 is required
-    if(Get-OSReleaseId -lt 1803) {
+    if((Get-OSReleaseId) -lt 1803) {
         Write-Error 'You need to run Windows Update and install Feature Updates to at least version 1803'
         return
     }
