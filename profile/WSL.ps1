@@ -41,7 +41,15 @@ if(Confirm-Install 'Boxstarter::WSL') {
 
     #--- Install Ubuntu in WSL
     Install-ChocoApp lxrunoffline -RefreshEnv   # install LxRunOffline
-    lxrun /install /y
+    $tools_path = Get-ToolsLocation
+    if(Test-Path $tools_path\lxrunoffline) {
+        Add-Path $tools_path\lxrunoffline
+        Update-SessionEnvironment
+    }
+    if(Test-Path $tools_path\lxrunoffline\LxRunOffline.exe) {
+        Rename-Item -path $tools_path\lxrunoffline\LxRunOffline.exe -newname LxRun.exe
+    }
+    LxRun /install /y
 
     #--- X server ---
     Install-ChocoApp cyg-get -RefreshEnv        # install cygwin

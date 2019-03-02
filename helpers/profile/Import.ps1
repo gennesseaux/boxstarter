@@ -49,6 +49,7 @@ Function Import-Function {
 
 # Defautl import
 Import-Function -WebClient $webclient -Path "$sRoot/helpers/function/Chocolatey.ps1"
+Import-Function -WebClient $webclient -Path "$sRoot/helpers/function/Path.ps1"
 Import-Function -WebClient $webclient -Path "$sRoot/helpers/function/EnvironmentVariable.ps1"
 Import-Function -WebClient $webclient -Path "$sRoot/helpers/function/Options.ps1"
 Import-Function -WebClient $webclient -Path "$sRoot/helpers/function/OsInformation.ps1"
