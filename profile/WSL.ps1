@@ -39,17 +39,27 @@ if(Confirm-Install 'Boxstarter::WSL') {
     Install-ChocoWindowsFeature Microsoft-Hyper-V-All
     Install-ChocoWindowsFeature Microsoft-Windows-Subsystem-Linux
 
-    #--- Install Ubuntu in WSL
-    Install-ChocoApp lxrunoffline -RefreshEnv   # install LxRunOffline
+    #--- Install lxrunoffline
+    Install-ChocoApp lxrunoffline -RefreshEnv
     $tools_path = Get-ToolsLocation
-    if(Test-Path $tools_path\lxrunoffline) {
-        Add-Path $tools_path\lxrunoffline
+    $lxrun_path = join-path $tools_path 'lxrunoffline'
+    if(Test-Path $lxrun_path) {
+        Add-Path $lxrun_path
         Update-SessionEnvironment
     }
-    if(Test-Path $tools_path\lxrunoffline\LxRunOffline.exe) {
-        Rename-Item -path $tools_path\lxrunoffline\LxRunOffline.exe -newname LxRun.exe
+
+    #--- Download Ubuntu ---
+    $ubuntu_codename = 'Ubuntu_Bionic'
+    $ubuntu_folder = join-path ([System.IO.Path]::GetTempPath())  $ubuntu_codename
+    $ubuntu_file = 'ubuntu-bionic-core-cloudimg-amd64-root.tar.gz'
+    $ubuntu_dest = join-path $ubuntu_folder $ubuntu_file
+    if(!(Test-Path("$ubuntu_dest"))) {
+        Get-WebFile -url 'https://partner-images.canonical.com/core/bionic/current/ubuntu-bionic-core-cloudimg-amd64-root.tar.gz' -fileName $ubuntu_dest
     }
-    LxRun /install /y
+
+    #--- Install Ubuntu in WSL
+    $wsl_folder = join-path $env:systemdrive 'wsl' $ubuntu_codename
+    lxrunoffline install -n $ubuntu_codename -d $wsl_folder -f $ubuntu_dest -s
 
     #--- X server ---
     Install-ChocoApp cyg-get -RefreshEnv        # install cygwin
