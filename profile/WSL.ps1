@@ -58,7 +58,7 @@ if(Confirm-Install 'Boxstarter::WSL') {
     }
 
     #--- Install Ubuntu in WSL
-    $wsl_folder = join-path $env:systemdrive 'wsl' $ubuntu_codename
+    $wsl_folder = Join-Path $env:systemdrive -ChildPath 'wsl' | Join-Path -ChildPath $ubuntu_codename
     lxrunoffline install -n $ubuntu_codename -d $wsl_folder -f $ubuntu_dest -s
 
     #--- X server ---
@@ -74,7 +74,10 @@ if(Confirm-Install 'Boxstarter::WSL') {
         Invoke-Item $wsl_gen_short
     }
 
-    ## Configure wsltty
+    # Install Hack font used in wsltty
+    Install-ChocoApp hackfont
+
+    # Configure wsltty
     Get-WebFile -url 'https://raw.githubusercontent.com/treffynnon/Windows-Boxstarter-with-WSL-Ubuntu/master/config_files/wsltty/paraiso_dark.mintty' -fileName "$env:APPDATA\wsltty\themes"
     Get-WebFile -url 'https://raw.githubusercontent.com/treffynnon/Windows-Boxstarter-with-WSL-Ubuntu/master/config_files/wsltty/config' -fileName "$env:APPDATA\wsltty\config"
 
@@ -109,7 +112,7 @@ if(Confirm-Install 'Boxstarter::WSL') {
 
     #
     Get-WebFile -url 'https://raw.githubusercontent.com/treffynnon/Windows-Boxstarter-with-WSL-Ubuntu/master/install.sh' -fileName "$($env:temp)\install.sh"
-    $windows_bash_script_path = [regex]::Escape('C:\tools\install.sh')
+    $windows_bash_script_path = [regex]::Escape("$($env:temp)\install.sh")
     $linux_bash_script_path=(wsl wslpath -a "$windows_bash_script_path")
     wsl cp "$linux_bash_script_path" "/tmp/"
     wsl bash -c "/tmp/install.sh"
