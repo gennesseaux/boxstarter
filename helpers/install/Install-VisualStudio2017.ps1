@@ -47,7 +47,7 @@ function Install-VisualStudio2017
     if($Professional)   { $Community=$false;    $Entreprise=$false; }
     if($Entreprise)     { $Community=$false;    $Professional=$false; }
 
-    # install visual studio code
+    # install visual studio
     if($Community)              { Install-ChocoApp VisualStudio2017Community }
     if($Professional)           { Install-ChocoApp visualstudio2017professional }
     if($Entreprise)             { Install-ChocoApp visualstudio2017enterprise }

@@ -14,7 +14,7 @@ function Install-JetBrainsResharper
     if($Cpp)        { $Resharper=$false; $Ultimate=$false }
     if($Ultimate)   { $Resharper=$false; $Cpp=$false }
 
-    # install visual studio code
+    # install Resharper
     if($Resharper)  { Install-ChocoApp resharper }
     if($Cpp)        { Install-ChocoApp cpp }
     if($Ultimate)   { Install-ChocoApp resharper-platform }

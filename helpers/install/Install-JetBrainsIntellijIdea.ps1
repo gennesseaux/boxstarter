@@ -11,7 +11,7 @@ function Install-JetBrainsIntellijIdea
     if($Community)  { $Ultimate=$false }
     if($Ultimate)   { $Community=$false }
 
-    # install visual studio code
+    # install intellij idea
     if($Community)  { Install-ChocoApp intellijidea-community }
     if($Ultimate)   { Install-ChocoApp intellijidea-ultimate }
 }
