@@ -35,9 +35,11 @@ if(Confirm-Install 'Boxstarter::WSL') {
         return
     }
 
-    #--- Windows Subsystems/Features ---
+    #--- Enable hyper-V
     Install-ChocoWindowsFeature Microsoft-Hyper-V-All
-    Install-ChocoWindowsFeature Microsoft-Windows-Subsystem-Linux
+
+    #--- Enable Windows Subsystem for Linux
+    Install-ChocoApp wsl
 
     #--- Install lxrunoffline
     Install-ChocoApp lxrunoffline -RefreshEnv
@@ -48,18 +50,8 @@ if(Confirm-Install 'Boxstarter::WSL') {
         Update-SessionEnvironment
     }
 
-    #--- Download Ubuntu ---
-    $ubuntu_codename = 'Ubuntu_Bionic'
-    $ubuntu_folder = join-path ([System.IO.Path]::GetTempPath())  $ubuntu_codename
-    $ubuntu_file = 'ubuntu-bionic-core-cloudimg-amd64-root.tar.gz'
-    $ubuntu_dest = join-path $ubuntu_folder $ubuntu_file
-    if(!(Test-Path("$ubuntu_dest"))) {
-        Get-WebFile -url 'https://partner-images.canonical.com/core/bionic/current/ubuntu-bionic-core-cloudimg-amd64-root.tar.gz' -fileName $ubuntu_dest
-    }
-
-    #--- Install Ubuntu in WSL
-    $wsl_folder = Join-Path $env:systemdrive -ChildPath 'wsl' | Join-Path -ChildPath $ubuntu_codename
-    lxrunoffline install -n $ubuntu_codename -d $wsl_folder -f $ubuntu_dest -s
+    #--- Install Ubuntu 18.04
+    Install-ChocoApp wsl-ubuntu-1804
 
     #--- X server ---
     Install-ChocoApp cyg-get -RefreshEnv        # install cygwin
