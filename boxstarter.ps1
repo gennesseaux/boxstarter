@@ -23,7 +23,7 @@ Param (
 $global:sVersion = '1.0'
 $global:sName = "boxstarter"
 # Script Path
-$global:sRoot = 'https://raw.githubusercontent.com/AbsCoDes/boxstarter/master/'
+$global:sRoot = 'https://raw.githubusercontent.com/gennesseaux/boxstarter/master/'
 #----------------------------------------------------------------------------------------------------------------------
 
 

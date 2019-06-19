@@ -46,7 +46,7 @@ $packages = @(
 )
 
 # Download my boxstarter bootstrap
-Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/AbsCoDes/boxstarter/master/boxstarter.ps1' -OutFile "$($env:temp)\boxstarter.ps1"
+Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/gennesseaux/boxstarter/master/boxstarter.ps1' -OutFile "$($env:temp)\boxstarter.ps1"
 
 # Start the setup process
 &Invoke-Command -ScriptBlock {

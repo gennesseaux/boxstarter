@@ -30,11 +30,11 @@ choco config set proxyPassword $env:chocolateyProxyPassword
 
 # My boxstarter script
 $scripts = @(
-    'https://raw.githubusercontent.com/AbsCoDes/boxstarter/master/example/gist/MyGist.ps1'
+    'https://raw.githubusercontent.com/gennesseaux/boxstarter/master/example/gist/MyGist.ps1'
 )
 
 # Download my boxstarter bootstrap
-$webClient.DownloadFile('https://raw.githubusercontent.com/AbsCoDes/boxstarter/master/boxstarter.ps1', "$($env:temp)\boxstarter.ps1")
+$webClient.DownloadFile('https://raw.githubusercontent.com/gennesseaux/boxstarter/master/boxstarter.ps1', "$($env:temp)\boxstarter.ps1")
 
 # Start the setup process
 &Invoke-Command -ScriptBlock {
