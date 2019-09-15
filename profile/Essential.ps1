@@ -21,12 +21,7 @@
 #--- [Import] ---------------------------------------------------------------------------------------------------------
 Import-Function -Path "$sRoot/helpers/tweak/Remove-WindowsApp.ps1"
 Import-Function -Path "$sRoot/helpers/tweak/Remove-OneDrive.ps1"
-Import-Function -Path "$sRoot/helpers/tweak/Disassembler0/Privacy.ps1"
-Import-Function -Path "$sRoot/helpers/tweak/Disassembler0/Security.ps1"
-Import-Function -Path "$sRoot/helpers/tweak/Disassembler0/Service.ps1"
-Import-Function -Path "$sRoot/helpers/tweak/Disassembler0/UI.ps1"
-Import-Function -Path "$sRoot/helpers/tweak/Disassembler0/ExplorerUI.ps1"
-Import-Function -Path "$sRoot/helpers/tweak/Disassembler0/Application.ps1"
+Import-Function -Path "$sRoot/helpers/tweak/Disassembler0/Win10.ps1"
 #----------------------------------------------------------------------------------------------------------------------
 
 
@@ -40,22 +35,27 @@ if(Confirm-Install 'Boxstarter::Essential::Privacy')
     DisableTelemetry                # EnableTelemetry
     DisableWiFiSense                # EnableWiFiSense
     # DisableSmartScreen            # EnableSmartScreen
-    DisableWebSearch                # EnableWebSearch
+    # DisableWebSearch              # EnableWebSearch
     DisableAppSuggestions           # EnableAppSuggestions
     DisableActivityHistory          # EnableActivityHistory
     DisableBackgroundApps           # EnableBackgroundApps
-    DisableLocationTracking         # EnableLocationTracking
+    # DisableSensors                # EnableSensors
+    DisableLocation                 # EnableLocation
     DisableMapUpdates               # EnableMapUpdates
     DisableFeedback                 # EnableFeedback
     DisableTailoredExperiences      # EnableTailoredExperiences
     DisableAdvertisingID            # EnableAdvertisingID
     DisableWebLangList              # EnableWebLangList
     DisableCortana                  # EnableCortana
+    # DisableBiometrics             # EnableBiometrics
+    # DisableCamera                 # EnableCamera
+    # DisableMicrophone             # EnableMicrophone
     DisableErrorReporting           # EnableErrorReporting
-    SetP2PUpdateLocal               # SetP2PUpdateInternet          # SetP2PUpdateDisable
+    # SetP2PUpdateLocal             # SetP2PUpdateInternet          # SetP2PUpdateDisable
     DisableDiagTrack                # EnableDiagTrack
     DisableWAPPush                  # EnableWAPPush
-    HideRecentJumplists             # ShowRecentJumplists
+    # EnableClearRecentFiles        # DisableClearRecentFiles
+    DisableRecentFiles              # EnableRecentFiles
 }
 
 
@@ -69,13 +69,6 @@ if(Confirm-Install 'Boxstarter::Essential::Security')
     # SetUACLow                     # SetUACHigh
     EnableSharingMappedDrives       # DisableSharingMappedDrives
     DisableAdminShares              # EnableAdminShares
-    # DisableSMB1                   # EnableSMB1
-    # DisableSMBServer              # EnableSMBServer
-    # DisableLLMNR                  # EnableLLMNR
-    # DisableNCSIProbe              # EnableNCSIProbe
-    SetCurrentNetworkPrivate        # SetCurrentNetworkPublic
-    # SetUnknownNetworksPrivate     # SetUnknownNetworksPublic
-    # DisableNetDevicesAutoInst     # EnableNetDevicesAutoInst
     # DisableFirewall               # EnableFirewall
     # HideDefenderTrayIcon          # ShowDefenderTrayIcon
     # DisableDefender               # EnableDefender
@@ -96,6 +89,34 @@ if(Confirm-Install 'Boxstarter::Essential::Security')
 
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#    Network settings
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+if(Confirm-Install 'Boxstarter::Essential::Network')
+{
+    Write-BoxstarterMessage "Updating Network settings..."
+
+    SetCurrentNetworkPrivate        # SetCurrentNetworkPublic
+    # SetUnknownNetworksPrivate     # SetUnknownNetworksPublic
+    # DisableNetDevicesAutoInst     # EnableNetDevicesAutoInst
+    # DisableHomeGroups             # EnableHomeGroups
+    # DisableSMB1                   # EnableSMB1
+    # DisableSMBServer              # EnableSMBServer
+    # DisableNetBIOS                # EnableNetBIOS
+    # DisableLLMNR                  # EnableLLMNR
+    # DisableLLDP                   # EnableLLDP
+    # DisableLLTD                   # EnableLLTD
+    # DisableMSNetClient            # EnableMSNetClient
+    # DisableQoS                    # EnableQoS
+    # DisableIPv4                   # EnableIPv4
+    # DisableIPv6                   # EnableIPv6
+    # DisableNCSIProbe              # EnableNCSIProbe
+    # DisableConnectionSharing      # EnableConnectionSharing
+    DisableRemoteAssistance         # EnableRemoteAssistance
+    # EnableRemoteDesktop           # DisableRemoteDesktop
+}
+
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #    Service settings
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 if(Confirm-Install 'Boxstarter::Essential::Service')
@@ -104,11 +125,12 @@ if(Confirm-Install 'Boxstarter::Essential::Service')
 
     # DisableUpdateMSRT             # EnableUpdateMSRT
     # DisableUpdateDriver           # EnableUpdateDriver
+    EnableUpdateMSProducts          # DisableUpdateMSProducts
+    # DisableUpdateAutoDownload     # EnableUpdateAutoDownload
     DisableUpdateRestart            # EnableUpdateRestart
-    # DisableHomeGroups             # EnableHomeGroups
+    DisableMaintenanceWakeUp        # EnableMaintenanceWakeUp
     DisableSharedExperiences        # EnableSharedExperiences
-    DisableRemoteAssistance         # EnableRemoteAssistance
-    EnableRemoteDesktop             # DisableRemoteDesktop
+    # EnableClipboardHistory        # DisableClipboardHistory
     DisableAutoplay                 # EnableAutoplay
     DisableAutorun                  # EnableAutorun
     # DisableRestorePoints          # EnableRestorePoints
@@ -116,12 +138,15 @@ if(Confirm-Install 'Boxstarter::Essential::Service')
     # DisableDefragmentation        # EnableDefragmentation
     # DisableSuperfetch             # EnableSuperfetch
     # DisableIndexing               # EnableIndexing
+    # DisableSwapFile               # EnableSwapFile
+    # DisableRecycleBin             # EnableRecycleBin
+    EnableNTFSLongPaths             # DisableNTFSLongPaths
     # DisableNTFSLastAccess         # EnableNTFSLastAccess
     # SetBIOSTimeUTC                # SetBIOSTimeLocal
     # EnableHibernation             # DisableHibernation
     # DisableSleepButton            # EnableSleepButton
     # DisableSleepTimeout           # EnableSleepTimeout
-    DisableFastStartup              # EnableFastStartup
+    # DisableFastStartup            # EnableFastStartup
     # DisableAutoRebootOnCrash      # EnableAutoRebootOnCrash
 }
 
@@ -133,34 +158,42 @@ if(Confirm-Install 'Boxstarter::Essential::UI')
 {
     Write-BoxstarterMessage "Updating UI settings..."
 
-    # DisableActionCenter           # EnableActionCenter
-    # DisableLockScreen             # EnableLockScreen
+    DisableActionCenter             # EnableActionCenter
+    DisableLockScreen               # EnableLockScreen
     # DisableLockScreenRS1          # EnableLockScreenRS1
-    # HideNetworkFromLockScreen     # ShowNetworkOnLockScreen
+    HideNetworkFromLockScreen       # ShowNetworkOnLockScreen
     # HideShutdownFromLockScreen    # ShowShutdownOnLockScreen
+    DisableLockScreenBlur           # EnableLockScreenBlur
     # DisableAeroShake              # EnableAeroShake
-    DisableStickyKeys               # EnableStickyKeys
+    DisableAccessibilityKeys        # EnableAccessibilityKeys
     ShowTaskManagerDetails          # HideTaskManagerDetails
     ShowFileOperationsDetails       # HideFileOperationsDetails
     # EnableFileDeleteConfirm       # DisableFileDeleteConfirm
     HideTaskbarSearch               # ShowTaskbarSearchIcon         # ShowTaskbarSearchBox
     HideTaskView                    # ShowTaskView
     # ShowSmallTaskbarIcons         # ShowLargeTaskbarIcons
-     SetTaskbarCombineAlways        # SetTaskbarCombineWhenFull      # SetTaskbarCombineNever
+    SetTaskbarCombineWhenFull       # SetTaskbarCombineNever        # SetTaskbarCombineAlways
     HideTaskbarPeopleIcon           # ShowTaskbarPeopleIcon
     ShowTrayIcons                   # HideTrayIcons
+    # ShowSecondsInTaskbar          # HideSecondsFromTaskbar
     DisableSearchAppInStore         # EnableSearchAppInStore
     DisableNewAppPrompt             # EnableNewAppPrompt
     # HideRecentlyAddedApps         # ShowRecentlyAddedApps
+    # HideMostUsedApps              # ShowMostUsedApps
     # SetControlPanelSmallIcons     # SetControlPanelLargeIcons     # SetControlPanelCategories
     DisableShortcutInName           # EnableShortcutInName
+    # HideShortcutArrow             # ShowShortcutArrow
     SetVisualFXPerformance          # SetVisualFXAppearance
+    # EnableTitleBarColor           # DisableTitleBarColor
     # EnableDarkTheme               # DisableDarkTheme
     # AddENKeyboard                 # RemoveENKeyboard
     EnableNumlock                   # DisableNumlock
+    # DisableEnhPointerPrecision    # EnableEnhPointerPrecision
     # SetSoundSchemeNone            # SetSoundSchemeDefault
     # DisableStartupSound           # EnableStartupSound
     # DisableChangingSoundScheme    # EnableChangingSoundScheme
+    # EnableVerboseStatus           # DisableVerboseStatus
+    DisableF1HelpKey                # EnableF1HelpKey
 }
 
 
@@ -171,34 +204,43 @@ if(Confirm-Install 'Boxstarter::Essential::UI-Preferences')
 {
     Write-BoxstarterMessage "Updating UI preferences..."
 
-
+    # ShowExplorerTitleFullPath     # HideExplorerTitleFullPath
     ShowKnownExtensions             # HideKnownExtensions
     ShowHiddenFiles                 # HideHiddenFiles
+    # ShowSuperHiddenFiles          # HideSuperHiddenFiles
+    # ShowEmptyDrives               # HideEmptyDrives
+    # ShowFolderMergeConflicts      # HideFolderMergeConflicts
     EnableNavPaneExpand             # DisableNavPaneExpand
+    # ShowNavPaneAllFolders         # HideNavPaneAllFolders
     # EnableFldrSeparateProcess     # DisableFldrSeparateProcess
     # EnableRestoreFldrWindows      # DisableRestoreFldrWindows
+    # ShowEncCompFilesColor         # HideEncCompFilesColor
     # DisableSharingWizard          # EnableSharingWizard
     # HideSelectCheckboxes          # ShowSelectCheckboxes
     HideSyncNotifications           # ShowSyncNotifications
     HideRecentShortcuts             # ShowRecentShortcuts
     SetExplorerThisPC               # SetExplorerQuickAccess
     HideQuickAccess                 # ShowQuickAccess
+    # HideRecycleBinFromDesktop     # ShowRecycleBinOnDesktop
     ShowThisPCOnDesktop             # HideThisPCFromDesktop
-    # HideUserFolderFromDesktop     # ShowUserFolderOnDesktop
-    # HideDesktopFromThisPC         # ShowDesktopInThisPC
+    # ShowUserFolderOnDesktop       # HideUserFolderFromDesktop
+    # ShowControlPanelOnDesktop     # HideControlPanelFromDesktop
+    # ShowNetworkOnDesktop          # HideNetworkFromDesktop
+    # ShowBuildNumberOnDesktop      # HideBuildNumberFromDesktop
+    HideDesktopFromThisPC           # ShowDesktopInThisPC
     # HideDesktopFromExplorer       # ShowDesktopInExplorer
-    # HideDocumentsFromThisPC       # ShowDocumentsInThisPC
+    HideDocumentsFromThisPC         # ShowDocumentsInThisPC
     # HideDocumentsFromExplorer     # ShowDocumentsInExplorer
-    # HideDownloadsFromThisPC       # ShowDownloadsInThisPC
+    HideDownloadsFromThisPC         # ShowDownloadsInThisPC
     # HideDownloadsFromExplorer     # ShowDownloadsInExplorer
-    # HideMusicFromThisPC           # ShowMusicInThisPC
+    HideMusicFromThisPC             # ShowMusicInThisPC
     # HideMusicFromExplorer         # ShowMusicInExplorer
-    # HidePicturesFromThisPC        # ShowPicturesInThisPC
+    HidePicturesFromThisPC          # ShowPicturesInThisPC
     # HidePicturesFromExplorer      # ShowPicturesInExplorer
-    # HideVideosFromThisPC          # ShowVideosInThisPC
+    HideVideosFromThisPC            # ShowVideosInThisPC
     # HideVideosFromExplorer        # ShowVideosInExplorer
     Hide3DObjectsFromThisPC         # Show3DObjectsInThisPC
-    Hide3DObjectsFromExplorer       # Show3DObjectsInExplorer
+    # Hide3DObjectsFromExplorer     # Show3DObjectsInExplorer
     # HideIncludeInLibraryMenu      # ShowIncludeInLibraryMenu
     # HideGiveAccessToMenu          # ShowGiveAccessToMenu
     # HideShareMenu                 # ShowShareMenu
@@ -218,11 +260,16 @@ if(Confirm-Install 'Boxstarter::Essential::Application')
     # DisableOneDrive               # EnableOneDrive
     # UninstallOneDrive             # InstallOneDrive
     # UninstallMsftBloat            # InstallMsftBloat
-    # UninstallThirdPartyBloat      # InstallThirdPartyBloat
+    UninstallThirdPartyBloat        # InstallThirdPartyBloat
     # UninstallWindowsStore         # InstallWindowsStore
     DisableXboxFeatures             # EnableXboxFeatures
+    # DisableFullscreenOptims       # EnableFullscreenOptims
     DisableAdobeFlash               # EnableAdobeFlash
+    DisableEdgePreload              # EnableEdgePreload
     DisableEdgeShortcutCreation     # EnableEdgeShortcutCreation
+    DisableIEFirstRun               # EnableIEFirstRun
+    DisableFirstLogonAnimation      # EnableFirstLogonAnimation
+    DisableMediaSharing             # EnableMediaSharing
     # UninstallMediaPlayer          # InstallMediaPlayer
     # UninstallInternetExplorer     # InstallInternetExplorer
     # UninstallWorkFolders          # InstallWorkFolders
@@ -243,44 +290,7 @@ if(Confirm-Install 'Boxstarter::Essential::Application')
 #    Remote desktop
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 if(Confirm-Install 'Boxstarter::Essential::RemoteDesktop') {
-    Enable-RemoteDesktop
-}
-
-
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#    Internet explorer
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-if(Confirm-Install 'Boxstarter::Essential::InternetExplorerESC') {
-    Disable-InternetExplorerESC
-}
-
-
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#    Taskbar options
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-if(Confirm-Install 'Boxstarter::Essential::TaskbarOptions') {
-    Set-TaskbarOptions -Size Small -Dock Bottom -Combine Always
-    Set-TaskbarOptions -Size Small -Dock Bottom -Combine Always -AlwaysShowIconsOn
-}
-
-
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#    Corner navigation options
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-if(Confirm-Install 'Boxstarter::Essential::CornerNavigationOptions') {
-    Set-CornerNavigationOptions -EnableUsePowerShellOnWinX
-}
-
-
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#    Windows update
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-if(Confirm-Install 'Boxstarter::Essential::Windows-Update')
-{
-    Write-BoxstarterMessage "Updating Windows update..."
-
-    # Disable P2P Update downloads outside of local network
-    Set-Registry -Path 'HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\DeliveryOptimization' -Name 'SystemSettingsDownloadMode' -Type 'DWord' -Value 3
+    EnableRemoteDesktop
 }
 
 
@@ -301,6 +311,7 @@ Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.Appconnector'       
 Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.BingFinance'                    'true'
 Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.BingFoodAndDrink'               'true'
 Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.BingHealthAndFitness'           'true'
+Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.BingMaps'                       'true'
 Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.BingNews'                       'true'
 Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.BingSports'                     'true'
 Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.BingTranslator'                 'true'
@@ -309,8 +320,11 @@ Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.BingWeather'        
 Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.CommsPhone'                     'true'
 Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.ConnectivityStore'              'true'
 Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.DesktopAppInstaller'            'false' # Don't remove
+Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.FreshPaint'                     'true'
 Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.GetHelp'                        'true'
 Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.Getstarted'                     'true'
+Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.HelpAndTips'                    'true'
+Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.Media.PlayReadyClient.2'        'true'
 Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.Messaging'                      'true'
 Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.Microsoft3DViewer'              'true'
 Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.MicrosoftOfficeHub'             'true'
@@ -321,13 +335,14 @@ Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.MinecraftUWP'       
 Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.MixedReality.Portal'            'true'
 Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.MSPaint'                        'true'
 Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.NetworkSpeedTest'               'true'
+Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.OfficeLens'                     'true'
 Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.Office.OneNote'                 'true'
 Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.Office.Sway'                    'true'
-Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.OfficeLens'                     'true'
 Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.OneConnect'                     'true'
-Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.OneDrive'                       'true'
+# Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.OneDrive'                     'false'
 Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.People'                         'true'
 Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.Print3D'                        'true'
+Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.Reader'                         'true'
 Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.RemoteDesktop'                  'false'
 Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.ScreenSketch'                   'true'
 Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.SkypeApp'                       'true'
@@ -348,17 +363,20 @@ Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.WindowsFeedbackHub' 
 Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.WindowsMaps'                    'true'
 Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.WindowsPhone'                   'true'
 Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.WindowsReadingList'             'true'
-Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.WindowsSoundRecorder'           'true'
+Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.WindowsSoundRecorder'           'false'
 Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.WindowsStore'                   'false' # Don't remove
-Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.XboxApp'                        'true'
-Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.XboxGameOverlay'                'true'
-Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.XboxGamingOverlay'              'true'
-Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.XboxIdentityProvider'           'true'
-Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.XboxSpeechToTextOverlay'        'true'
-Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.Xbox.TCUI'                      'true'
+Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.XboxApp'                        'false'
+Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.XboxGameOverlay'                'false'
+Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.XboxGamingOverlay'              'false'
+Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.XboxIdentityProvider'           'false'
+Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.XboxSpeechToTextOverlay'        'false'
+Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.Xbox.TCUI'                      'false'
+Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.WinJS.1.0'                      'true'
+Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.WinJS.2.0'                      'true'
 Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.YourPhone'                      'true'
 Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.ZuneMusic'                      'true'
 Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.ZuneVideo'                      'true'
+Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.Advertising.Xaml'               'true' # Dependency for microsoft.windowscommunicationsapps, Microsoft.BingWeather
 
 Set-DefaultOption 'Boxstarter::Essential::Remove::windows.immersivecontrolpanel'            'true'
 
@@ -382,6 +400,7 @@ if(Get-OptionBool 'Boxstarter::Essential::Remove::Microsoft.Appconnector')      
 if(Get-OptionBool 'Boxstarter::Essential::Remove::Microsoft.BingFinance')                   { $apps += 'Microsoft.BingFinance' }
 if(Get-OptionBool 'Boxstarter::Essential::Remove::Microsoft.BingFoodAndDrink')              { $apps += 'Microsoft.BingFoodAndDrink' }
 if(Get-OptionBool 'Boxstarter::Essential::Remove::Microsoft.BingHealthAndFitness')          { $apps += 'Microsoft.BingHealthAndFitness' }
+if(Get-OptionBool 'Boxstarter::Essential::Remove::Microsoft.BingMaps')                      { $apps += 'Microsoft.BingMaps' }
 if(Get-OptionBool 'Boxstarter::Essential::Remove::Microsoft.BingNews')                      { $apps += 'Microsoft.BingNews' }
 if(Get-OptionBool 'Boxstarter::Essential::Remove::Microsoft.BingSports')                    { $apps += 'Microsoft.BingSports' }
 if(Get-OptionBool 'Boxstarter::Essential::Remove::Microsoft.BingTranslator')                { $apps += 'Microsoft.BingTranslator' }
@@ -390,8 +409,11 @@ if(Get-OptionBool 'Boxstarter::Essential::Remove::Microsoft.BingWeather')       
 if(Get-OptionBool 'Boxstarter::Essential::Remove::Microsoft.CommsPhone')                    { $apps += 'Microsoft.CommsPhone' }
 if(Get-OptionBool 'Boxstarter::Essential::Remove::Microsoft.ConnectivityStore')             { $apps += 'Microsoft.ConnectivityStore' }
 if(Get-OptionBool 'Boxstarter::Essential::Remove::Microsoft.DesktopAppInstaller')           { $apps += 'Microsoft.DesktopAppInstaller' }
+if(Get-OptionBool 'Boxstarter::Essential::Remove::Microsoft.FreshPaint')                    { $apps += 'Microsoft.FreshPaint' }
 if(Get-OptionBool 'Boxstarter::Essential::Remove::Microsoft.GetHelp')                       { $apps += 'Microsoft.GetHelp' }
 if(Get-OptionBool 'Boxstarter::Essential::Remove::Microsoft.Getstarted')                    { $apps += 'Microsoft.Getstarted' }
+if(Get-OptionBool 'Boxstarter::Essential::Remove::Microsoft.HelpAndTips')                   { $apps += 'Microsoft.HelpAndTips' }
+if(Get-OptionBool 'Boxstarter::Essential::Remove::Microsoft.Media.PlayReadyClient.2')       { $apps += 'Microsoft.Media.PlayReadyClient.2' }
 if(Get-OptionBool 'Boxstarter::Essential::Remove::Microsoft.Messaging')                     { $apps += 'Microsoft.Messaging' }
 if(Get-OptionBool 'Boxstarter::Essential::Remove::Microsoft.Microsoft3DViewer')             { $apps += 'Microsoft.Microsoft3DViewer' }
 if(Get-OptionBool 'Boxstarter::Essential::Remove::Microsoft.MicrosoftOfficeHub')            { $apps += 'Microsoft.MicrosoftOfficeHub' }
@@ -402,17 +424,21 @@ if(Get-OptionBool 'Boxstarter::Essential::Remove::Microsoft.MinecraftUWP')      
 if(Get-OptionBool 'Boxstarter::Essential::Remove::Microsoft.MixedReality.Portal')           { $apps += 'Microsoft.MixedReality.Portal' }
 if(Get-OptionBool 'Boxstarter::Essential::Remove::Microsoft.MSPaint')                       { $apps += 'Microsoft.MSPaint' }
 if(Get-OptionBool 'Boxstarter::Essential::Remove::Microsoft.NetworkSpeedTest')              { $apps += 'Microsoft.NetworkSpeedTest' }
+if(Get-OptionBool 'Boxstarter::Essential::Remove::Microsoft.OfficeLens')                    { $apps += 'Microsoft.OfficeLens' }
 if(Get-OptionBool 'Boxstarter::Essential::Remove::Microsoft.Office.OneNote')                { $apps += 'Microsoft.Office.OneNote' }
 if(Get-OptionBool 'Boxstarter::Essential::Remove::Microsoft.Office.Sway')                   { $apps += 'Microsoft.Office.Sway' }
-if(Get-OptionBool 'Boxstarter::Essential::Remove::Microsoft.OfficeLens')                    { $apps += 'Microsoft.OfficeLens' }
 if(Get-OptionBool 'Boxstarter::Essential::Remove::Microsoft.OneConnect')                    { $apps += 'Microsoft.OneConnect' }
-#if(Get-OptionBool 'Boxstarter::Essential::Remove::Microsoft.OneDrive')                      { $apps += 'Microsoft.OneDrive' }
+# if(Get-OptionBool 'Boxstarter::Essential::Remove::Microsoft.OneDrive')                    { $apps += 'Microsoft.OneDrive' }
 if(Get-OptionBool 'Boxstarter::Essential::Remove::Microsoft.People')                        { $apps += 'Microsoft.People' }
 if(Get-OptionBool 'Boxstarter::Essential::Remove::Microsoft.Print3D')                       { $apps += 'Microsoft.Print3D' }
+if(Get-OptionBool 'Boxstarter::Essential::Remove::Microsoft.Reader')                        { $apps += 'Microsoft.Reader' }
+if(Get-OptionBool 'Boxstarter::Essential::Remove::Microsoft.RemoteDesktop')                 { $apps += 'Microsoft.RemoteDesktop' }
+if(Get-OptionBool 'Boxstarter::Essential::Remove::Microsoft.ScreenSketch')                  { $apps += 'Microsoft.ScreenSketch' }
 if(Get-OptionBool 'Boxstarter::Essential::Remove::Microsoft.SkypeApp')                      { $apps += 'Microsoft.SkypeApp' }
 if(Get-OptionBool 'Boxstarter::Essential::Remove::Microsoft.StorePurchaseApp')              { $apps += 'Microsoft.StorePurchaseApp' }
 if(Get-OptionBool 'Boxstarter::Essential::Remove::Microsoft.Todos')                         { $apps += 'Microsoft.Todos' }
-if(Get-OptionBool 'Boxstarter::Essential::Remove::Microsoft.Wallet')                        { $apps += 'Microsoft.WalletWalletTodos' }
+if(Get-OptionBool 'Boxstarter::Essential::Remove::Microsoft.Wallet')                        { $apps += 'Microsoft.Wallet' }
+if(Get-OptionBool 'Boxstarter::Essential::Remove::Microsoft.WebMediaExtensions')            { $apps += 'Microsoft.WebMediaExtensions' }
 if(Get-OptionBool 'Boxstarter::Essential::Remove::Microsoft.Whiteboard')                    { $apps += 'Microsoft.Whiteboard' }
 if(Get-OptionBool 'Boxstarter::Essential::Remove::Microsoft.Windows.Photos')                { $apps += 'Microsoft.Windows.Photos' }
 if(Get-OptionBool 'Boxstarter::Essential::Remove::Microsoft.Windows.CapturePicker')         { $apps += 'Microsoft.Windows.CapturePicker' }
@@ -434,8 +460,12 @@ if(Get-OptionBool 'Boxstarter::Essential::Remove::Microsoft.XboxGamingOverlay') 
 if(Get-OptionBool 'Boxstarter::Essential::Remove::Microsoft.XboxIdentityProvider')          { $apps += 'Microsoft.XboxIdentityProvider' }
 if(Get-OptionBool 'Boxstarter::Essential::Remove::Microsoft.XboxSpeechToTextOverlay')       { $apps += 'Microsoft.XboxSpeechToTextOverlay' }
 if(Get-OptionBool 'Boxstarter::Essential::Remove::Microsoft.Xbox.TCUI')                     { $apps += 'Microsoft.Xbox.TCUI' }
+if(Get-OptionBool 'Boxstarter::Essential::Remove::Microsoft.WinJS.1.0')                     { $apps += 'Microsoft.WinJS.1.0' }
+if(Get-OptionBool 'Boxstarter::Essential::Remove::Microsoft.WinJS.2.0')                     { $apps += 'Microsoft.WinJS.2.0' }
+if(Get-OptionBool 'Boxstarter::Essential::Remove::Microsoft.YourPhone')                     { $apps += 'Microsoft.YourPhone' }
 if(Get-OptionBool 'Boxstarter::Essential::Remove::Microsoft.ZuneMusic')                     { $apps += 'Microsoft.ZuneMusic' }
 if(Get-OptionBool 'Boxstarter::Essential::Remove::Microsoft.ZuneVideo')                     { $apps += 'Microsoft.ZuneVideo' }
+if(Get-OptionBool 'Boxstarter::Essential::Remove::Microsoft.Advertising.Xaml')              { $apps += 'Microsoft.Advertising.Xaml' }
 
 if(Get-OptionBool 'Boxstarter::Essential::Remove::windows.immersivecontrolpanel')           { $apps += 'windows.immersivecontrolpanel' }
 
