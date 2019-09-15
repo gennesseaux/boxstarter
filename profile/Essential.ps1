@@ -378,8 +378,6 @@ Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.ZuneMusic'          
 Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.ZuneVideo'                      'true'
 Set-DefaultOption 'Boxstarter::Essential::Remove::Microsoft.Advertising.Xaml'               'true' # Dependency for microsoft.windowscommunicationsapps, Microsoft.BingWeather
 
-Set-DefaultOption 'Boxstarter::Essential::Remove::windows.immersivecontrolpanel'            'true'
-
 Set-DefaultOption 'Boxstarter::Essential::Remove::Autodesk'                                 'true'
 Set-DefaultOption 'Boxstarter::Essential::Remove::BubbleWitch'                              'true'
 Set-DefaultOption 'Boxstarter::Essential::Remove::CandyCrush'                               'true'
@@ -466,8 +464,6 @@ if(Get-OptionBool 'Boxstarter::Essential::Remove::Microsoft.YourPhone')         
 if(Get-OptionBool 'Boxstarter::Essential::Remove::Microsoft.ZuneMusic')                     { $apps += 'Microsoft.ZuneMusic' }
 if(Get-OptionBool 'Boxstarter::Essential::Remove::Microsoft.ZuneVideo')                     { $apps += 'Microsoft.ZuneVideo' }
 if(Get-OptionBool 'Boxstarter::Essential::Remove::Microsoft.Advertising.Xaml')              { $apps += 'Microsoft.Advertising.Xaml' }
-
-if(Get-OptionBool 'Boxstarter::Essential::Remove::windows.immersivecontrolpanel')           { $apps += 'windows.immersivecontrolpanel' }
 
 if(Get-OptionBool 'Boxstarter::Essential::Remove::Autodesk')                                { $apps += '*Autodesk*' }
 if(Get-OptionBool 'Boxstarter::Essential::Remove::BubbleWitch')                             { $apps += '*BubbleWitch*' }
