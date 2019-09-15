@@ -10,6 +10,11 @@ $Boxstarter.AutoLogin=$true
 #       Boxstarter::Begin=false
 #
 
+#--- [Import] ---------------------------------------------------------------------------------------------------------
+Import-Function -WebClient $webclient -Path "https://raw.githubusercontent.com/chocolatey/boxstarter/master/BoxStarter.Common/Remove-BoxstarterError.ps1"
+Import-Function -WebClient $webclient -Path "https://raw.githubusercontent.com/chocolatey/boxstarter/master/Boxstarter.Bootstrapper/Stop-UpdateServices.ps1"
+#----------------------------------------------------------------------------------------------------------------------
+
 # Temporary
 Disable-UAC
 

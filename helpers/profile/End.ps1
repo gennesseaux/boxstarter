@@ -6,6 +6,12 @@
 #       Boxstarter::End=false
 #
 
+#--- [Import] ---------------------------------------------------------------------------------------------------------
+Import-Function -WebClient $webclient -Path "https://raw.githubusercontent.com/chocolatey/boxstarter/master/BoxStarter.Common/Remove-BoxstarterError.ps1"
+Import-Function -WebClient $webclient -Path "https://raw.githubusercontent.com/chocolatey/boxstarter/master/Boxstarter.Bootstrapper/Start-UpdateServices.ps1"
+#----------------------------------------------------------------------------------------------------------------------
+
+
 # Restore temporary settings
 Enable-UAC
 
