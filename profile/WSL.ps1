@@ -137,6 +137,9 @@ if(Confirm-Install 'Boxstarter::WSL') {
 
     #
     Update-SessionEnvironment
+
+    #
+    if(Test-PendingReboot) { Invoke-Reboot }
 }
 
 
@@ -193,4 +196,7 @@ if(Confirm-Install 'Boxstarter::WSL-docker') {
     wsl sudo bash -c "echo [automount] > /etc/wsl.conf"
     wsl sudo bash -c "echo root = / >> /etc/wsl.conf"
     wsl sudo bash -c "echo options = ""metadata"" >> /etc/wsl.conf"
+
+    #
+    if(Test-PendingReboot) { Invoke-Reboot }
 }
