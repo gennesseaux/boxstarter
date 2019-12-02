@@ -1,9 +1,10 @@
 function Decrypt-String {
     param (
-        [Parameter(Mandatory=$true)]
-        [ValidateNotNull()]
         [String]$string
     )
+    if ([string]::IsNullOrWhiteSpace($string)) {
+        return $null;
+    }
     $securestring = convertto-securestring -string $string
     $bstr = [System.Runtime.InteropServices.Marshal]::SecureStringToBSTR($securestring)
     return [System.Runtime.InteropServices.Marshal]::PtrToStringAuto($bstr)
