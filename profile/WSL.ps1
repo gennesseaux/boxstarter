@@ -44,6 +44,15 @@ if(Confirm-Install 'Boxstarter::WSL') {
         return
     }
 
+    # proxy
+    if( ! ([string]::IsNullOrEmpty($proxyLocation) -and [string]::IsNullOrEmpty($proxyUser)  -and [string]::IsNullOrEmpty($proxyPassword) ) ) {
+        $proxyport = $proxyLocation.Substring($proxyLocation.LastIndexOf('/')+1)
+        $proxy = $proxyport.Substring(0, $proxyport.LastIndexOf(':'))
+        $port = $proxyport.Substring($proxyport.LastIndexOf(':')+1)
+        $user = $proxyUser.Substring($proxyUser.LastIndexOf('\')+1)
+        $http_proxy = "http://${user}:${proxyPassword}@${proxy}:${port}"
+    }
+
     #--- Enable hyper-V
     Install-ChocoWindowsFeature Microsoft-Hyper-V-All
 
@@ -62,10 +71,6 @@ if(Confirm-Install 'Boxstarter::WSL') {
     #--- Install Ubuntu 18.04
     Install-ChocoApp wsl-ubuntu-1804
 
-    #--- X server ---
-    Install-ChocoApp cyg-get -RefreshEnv        # install cygwin
-    cyg-get xorg-server xinit                   # install cygwin/x
-
     #--- Decent bash/WSL terminal - wsltty
     Install-ChocoApp wsltty
 
@@ -78,62 +83,41 @@ if(Confirm-Install 'Boxstarter::WSL') {
     # Install Hack font used in wsltty
     Install-ChocoApp hackfont
 
-    # Update wsl proxy
-    if( ! ([string]::IsNullOrEmpty($proxyLocation) -and [string]::IsNullOrEmpty($proxyUser)  -and [string]::IsNullOrEmpty($proxyPassword) ) ) {
-        $proxyport = $proxyLocation.Substring($proxyLocation.LastIndexOf('/')+1)
-        $proxy = $proxyport.Substring(0, $proxyport.LastIndexOf(':'))
-        $port = $proxyport.Substring($proxyport.LastIndexOf(':')+1)
-        $user = $proxyUser.Substring($proxyUser.LastIndexOf('\')+1)
-        $http_proxy = "http://${user}:${proxyPassword}@${proxy}:${port}"
-
-        wsl sudo bash -c "echo export http_proxy=$http_proxy >> /etc/environment"
-        wsl sudo bash -c "echo export https_proxy=$http_proxy >> /etc/environment"
-        wsl sudo bash -c "echo export ftp_proxy=$http_proxy >> /etc/environment"
-    }
-
     # Configure wsltty
     Get-WebFile -url 'https://raw.githubusercontent.com/treffynnon/Windows-Boxstarter-with-WSL-Ubuntu/master/config_files/wsltty/paraiso_dark.mintty' -fileName "$env:APPDATA\wsltty\themes"
     Get-WebFile -url 'https://raw.githubusercontent.com/treffynnon/Windows-Boxstarter-with-WSL-Ubuntu/master/config_files/wsltty/config' -fileName "$env:APPDATA\wsltty\config"
 
-    # Setup weasel-pageant
-    $url = 'https://github.com/vuori/weasel-pageant/releases/download/v1.4/weasel-pageant-1.4.zip'
-    $archive = "$($env:temp)\weasel-pageant-1-4.zip"
-    if(!(Test-Path $archive)) {
+    # Ubuntu update
+    if((wsl awk '/^ID=/' /etc/*-release | wsl awk -F'=' '{ print tolower(\$2) }') -eq 'ubuntu') {
 
-        Get-WebFile -url $url -fileName $archive
+        # Update wsl proxy
+        if( ! ([string]::IsNullOrEmpty($proxyLocation) -and [string]::IsNullOrEmpty($proxyUser)  -and [string]::IsNullOrEmpty($proxyPassword) ) ) {
+            $proxyport = $proxyLocation.Substring($proxyLocation.LastIndexOf('/')+1)
+            $proxy = $proxyport.Substring(0, $proxyport.LastIndexOf(':'))
+            $port = $proxyport.Substring($proxyport.LastIndexOf(':')+1)
+            $user = $proxyUser.Substring($proxyUser.LastIndexOf('\')+1)
+            $http_proxy = "http://${user}:${proxyPassword}@${proxy}:${port}"
 
-        if(Test-Path "$archive") {
-            $zipfile = Get-Item "$archive"
-            Write-Host "[installer.weasel-pageant] Downloaded successfully"
-            Write-Host "[installer.weasel-pageant] Extracting $archive to ${zipfile.DirectoryName}..."
-            Expand-Archive $archive -DestinationPath $zipfile.DirectoryName
-        } else {
-            Write-Error "[installer.weasel-pageant] Download failed"
+            wsl sudo bash -c "echo export http_proxy=$http_proxy >> /etc/environment"
+            wsl sudo bash -c "echo export https_proxy=$http_proxy >> /etc/environment"
+            wsl sudo bash -c "echo export ftp_proxy=$http_proxy >> /etc/environment"
         }
-    }
 
-    #
-    if((wsl awk '/^ID=/' /etc/*-release | wsl awk -F'=' '{ print tolower(\$2) }') -ne 'ubuntu') {
-        Write-Error 'Ensure Windows Subsystem for Linux is setup to run the Ubuntu distribution'
-        return
-    } else {
-        Write-Host "Ubuntu installed"
-    }
+        # Update ubuntu
+        Start-Process "wsl" -argumentlist "sudo test -r /etc/environment && source /etc/environment" -wait
 
-    #
-    if((wsl awk '/^DISTRIB_RELEASE=/' /etc/*-release | wsl awk -F'=' '{ print tolower(\$2) }') -lt 16.04) {
-        Write-Error 'You need to install a minimum of Ubuntu 16.04 Xenial Xerus before running this script'
-        return
-    } else {
-        Write-Host "Ubuntu version is compatible"
-    }
+        Start-Process "wsl" -argumentlist "sudo apt-get update -y && apt-get upgrade -y" -wait
+        Start-Process "wsl" -argumentlist "sudo apt-get autoremove -y && apt-get autoclean -y" -wait
 
-    #
-    Get-WebFile -url 'https://raw.githubusercontent.com/treffynnon/Windows-Boxstarter-with-WSL-Ubuntu/master/install.sh' -fileName "$($env:temp)\install.sh"
-    $windows_bash_script_path = [regex]::Escape("$($env:temp)\install.sh")
-    $linux_bash_script_path=(wsl wslpath -a "$windows_bash_script_path")
-    wsl cp "$linux_bash_script_path" "/tmp/"
-    wsl bash -c "/tmp/install.sh"
+        Start-Process "wsl" -argumentlist "sudo apt-get install -y build-essential bzip2 cmake colordiff coreutils curl dos2unix doxygen git git-lfs linux-tools-common llvm rsync unzip wget" -wait
+        Start-Process "wsl" -argumentlist "sudo curl -L --output /tmp/nord-dircolors.zip https://github.com/arcticicestudio/nord-dircolors/archive/develop.zip && mkdir -p ~/.dircolors && unzip -o -d ~/.dircolors /tmp/nord-dircolors.zip" -wait
+
+        Start-Process "wsl" -argumentlist "sudo mkdir -p ~/.bashrc.d && chmod 700 ~/.bashrc.d" -wait
+        Start-Process "wsl" -argumentlist "sudo grep ~/.bashrc.d ~/.bashrc ||  echo >> ~/.bashrc" -wait
+        Start-Process "wsl" -argumentlist "sudo grep ~/.bashrc.d ~/.bashrc ||  echo 'for file in ~/.bashrc.d/*.bashrc; do source '\\$'{file}; done' >> ~/.bashrc" -wait
+        Start-Process "wsl" -argumentlist "sudo echo 'test -r ~/.dir_colors && eval '\\$'(dircolors ~/.dir_colors)' > ~/.bashrc.d/dir_colors.bashrc" -wait
+        Start-Process "wsl" -argumentlist "sudo chmod +x ~/.bashrc.d/*" -wait
+    }
 
     #
     Update-SessionEnvironment
