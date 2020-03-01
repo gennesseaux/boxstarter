@@ -24,6 +24,7 @@ Import-Function -Path "$sRoot/helpers/install/Install-VisualStudioCodeExtensions
 #  Other common tools
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 if(Confirm-Install 'Boxstarter::DevCore::git')      { Install-ChocoApp git -Params '"/GitAndUnixToolsOnPath /WindowsTerminal"' -RefreshEnv }
+if(Confirm-Install 'Boxstarter::DevCore::git')      { Install-ChocoApp git-lfs }
 if(Confirm-Install 'Boxstarter::DevCore::git')      { Install-ChocoApp git-credential-manager-for-windows }
 if(Confirm-Install 'Boxstarter::DevCore::git-fork') { Install-ChocoApp git-fork }
 if(Confirm-Install 'Boxstarter::DevCore::poshgit')  { Install-ChocoApp poshgit }
